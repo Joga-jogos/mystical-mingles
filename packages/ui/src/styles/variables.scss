@@ -1,0 +1,113 @@
+:root {
+    --info: #4DADF7;
+    --info-light: #afdafb;
+    --info-dark: #0a7cd4;
+    --info-contrast: #000000;
+    --info-opacity: #4DADF733;
+    --error: #F24822;
+    --error-light: #f89882;
+    --error-dark: #a4260a;
+    --error-contrast: #ffffff;
+    --error-opacity: #F2482233;
+    --warning: #FFB547;
+    --warning-light: #ffdead;
+    --warning-dark: #e08600;
+    --warning-contrast: #000000;
+    --warning-opacity: #FFB54733;
+    --success: #34C759;
+    --success-light: #83de9a;
+    --success-dark: #1f7635;
+    --success-contrast: #000000;
+    --success-opacity: #34C75933;
+    --primary: #8F1B30;
+    --primary-light: #d93754;
+    --primary-dark: #390b13;
+    --primary-contrast: #ffffff;
+    --primary-opacity: #8F1B3033;
+    --secondary: #F8D99D;
+    --secondary-light: #fffefc;
+    --secondary-dark: #f1b43e;
+    --secondary-contrast: #000000;
+    --secondary-opacity: #F8D99D33;
+    --grey: #F1F1F1;
+    --grey-light: #ffffff;
+    --grey-dark: #bebebe;
+    --grey-contrast: #000000;
+    --grey-opacity: #F1F1F133;
+    --text-primary: rgb(33, 33, 33);
+    --text-secondary: rgb(85, 85, 85);
+    --text-disabled: rgb(180, 180, 180);
+    --background-paper: #FAFAFA;
+    --background-default: #FFFFFF;
+    --divider: rgba(0, 0, 0, 0.08);
+    --radius: 8px;
+    --spacing: 8px;
+}
+
+$colors: (
+    'primary',
+    'secondary',
+    'error',
+    'success',
+    'info',
+    'warning'
+);
+
+$colors-text: (
+    'primary',
+    'secondary',
+    'disabled'
+);
+
+$colors-background: (
+    'paper',
+    'default'
+);
+
+$colors-divider: (
+    'divider'
+);
+
+/* TRANSITION */
+$animation: .3s cubic-bezier(0.4, 0.0, 0.2, 1);
+
+/* ICON SIZE */
+$icon-small: 16px;
+$icon-medium: 24px;
+$icon-large: 32px;
+
+/* FONT SIZE */
+$font-small: 12px;
+$font-medium: 16px;
+$font-large: 22px;
+
+$sizes: (
+    'small',
+    'large',
+    'medium'
+);
+
+$short-sizes: (
+    'xl',
+    'lg',
+    'md',
+    'sm',
+);
+
+/* FONT FAMILY */
+$font-regular: "poppins" !important;
+$font-mystical-mingles: "mystical-mingles" !important;
+$font-zuera: "zuera" !important;
+
+/* FONT FAMILY */
+$spacing-regular: 16px;
+$spacing-small: 8px;
+$spacing-xlarge: 32px;
+
+/* PROPORTION */
+$proportion: 12px 16px;
+
+/* BOX SHADOW */
+$boxShadowSmall: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+$boxShadowRegular: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+$boxShadowLarge: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);

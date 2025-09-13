@@ -1,0 +1,23 @@
+{
+  "projects": {
+    "production": "mystical-mingles",
+    "staging": "mystical-mingles"
+  },
+  "targets": {
+    "mystical-mingles": {
+      "hosting": {
+        "backoffice": [
+          "backoffice-mystical-mingles"
+        ]
+      }
+    },
+    "mystical-mingles": {
+      "hosting": {
+        "backoffice": [
+          "stg-backoffice-mystical-mingles"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
