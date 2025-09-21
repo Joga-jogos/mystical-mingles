@@ -35,12 +35,6 @@ function mapSpecies<
     return result;
 };
 
-// export const cards = mapSpecies<SpeciesDetailsMap[Species]['cards']>('cards');
-// export const genes = mapSpecies<SpeciesGenes<SpeciesGenesParts>>('genes');
-// export const colors = mapSpecies<SpeciesDetailsMap[Species]['colors']>('colors');
-// export const modificators = mapSpecies<SpeciesDetailsMap[Species]['life_multiplicator']>('life_multiplicator');
-// export const categories = mapSpecies<SpeciesDetailsMap[Species]['category']>('category');
-
 export const cards = mapSpecies('cards');
 export const genes = mapSpecies('genes');
 export const colors = mapSpecies('colors');

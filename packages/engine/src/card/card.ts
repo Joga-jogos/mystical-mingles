@@ -54,8 +54,8 @@ export default class Card<S extends Species, P extends ActiveParts> implements C
     set id(value: string) { this._id = value; }
 
     get attack() { return this._attack; };
-    set attack(value: number) { this._attack = value * 10; };
+    set attack(value: number) { this._attack = value; };
 
     get shield() { return this._shield; };
-    set shield(value: number) { this._shield = value * 10; };
+    set shield(value: number) { this._shield = value; };
 }

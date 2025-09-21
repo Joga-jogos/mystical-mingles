@@ -2,20 +2,5 @@
     position: relative;
     padding: 30px;
 
-    &__life {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-
-        text-align: center;
-
-        width: 100%;
-        padding: $proportion;
-        border-radius: var(--radius);
-
-        color: var(--success);
-
-        font-family: $font-regular;
-    }
+    transition: all $animation;
 }

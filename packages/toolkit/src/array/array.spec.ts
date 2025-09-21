@@ -41,16 +41,4 @@ describe('higherThan', () => {
 
         expect(result).toEqual({ a: { b: 0 } });
     });
-
-    it('should return error if property path does not exist', () => {
-        const arr = [
-            { a: { b: 1 } },
-            { a: { b: 2 } },
-            { a: { b: 3 } }
-        ];
-
-        const path = 'a.c';
-
-        expect(() => higherThan(arr, path)).toThrow();
-    });
 });

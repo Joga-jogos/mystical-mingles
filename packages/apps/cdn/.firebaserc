@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "joga-jogos"
+  },
+  "targets": {
+    "joga-jogos": {
+      "hosting": {
+        "cdn": [
+          "cdn-joga-jogos"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

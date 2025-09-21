@@ -1,22 +1,24 @@
 {
   "name": "@mystical-mingles/engine",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "license": "MIT",
   "author": "leonardo.goncalves <leogoncalves.contato@gmail.com>",
   "exports": {
     ".": {
       "import": "./src/index.ts",
-      "require": "./src/index.ts"
+      "require": "./dist/index.js"
     },
     "./*": {
       "import": "./src/*/index.ts",
-      "require": "./src/*/index.ts"
+      "require": "./dist/*/index.js"
     }
   },
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "build": "tsc -p tsconfig.build.json",
+    "watch": "tsc -w -p tsconfig.build.json",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {

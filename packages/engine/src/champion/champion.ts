@@ -55,6 +55,7 @@ export default class Champion<S extends Species> implements ChampionOptions {
     get options(): ChampionOptionsWithMingleOptions<S> {
         return {
             coordinates: this.coordinates,
+            life: this.life,
             mingle: {
                 id: this.id,
                 name: this.name,
@@ -72,4 +73,25 @@ export default class Champion<S extends Species> implements ChampionOptions {
     get totalLife() { return Math.ceil(this.stats.life * modificators[this.species]); }
 
     get isStunned() { return this.debuffs.stun; }
+
+    takeDamage(damage: number) {
+        const remainingDamage = damage - this.shield;
+
+        if (remainingDamage < 0) {
+            this.shield = Math.abs(Math.ceil(remainingDamage));
+            return;
+        }
+
+        this.shield = 0;
+
+        const newLife = this.life - remainingDamage;
+
+        this.life = newLife > 0 ? newLife : 0;
+    }
+
+    takeTrueDamage(damage: number) {
+        const newLife = this.life - damage;
+
+        this.life = newLife > 0 ? newLife : 0;
+    }
 }

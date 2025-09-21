@@ -88,3 +88,7 @@ export function lessThan<T>(arr: T[], path: Path<T>): T {
 export function getFilledArray(length: number) {
     return Array.from(Array(length), (_, index) => index);
 }
+
+export function flatten<T>(array: Array<T | T[]>): T[] {
+    return array.reduce<T[]>((acc, val) => acc.concat(val), []);
+}

@@ -3,8 +3,8 @@ import Card from '../../card';
 export const HORN_CARDS: Card<'bird', 'horn'>[] = [
     new Card({
         cost: 1,
-        attack: 15,
-        shield: 3,
+        attack: 150,
+        shield: 30,
         part: 'horn',
         species: 'bird',
         name: 'Bird Topknot',
@@ -21,8 +21,8 @@ export const HORN_CARDS: Card<'bird', 'horn'>[] = [
 export const TAIL_CARDS: Card<'bird', 'tail'>[] = [
     new Card({
         cost: 1,
-        attack: 12,
-        shield: 3,
+        attack: 120,
+        shield: 30,
         part: 'tail',
         species: 'bird',
         name: 'Bird Feather',
@@ -39,8 +39,8 @@ export const TAIL_CARDS: Card<'bird', 'tail'>[] = [
 export const MOUTH_CARDS: Card<'bird', 'mouth'>[] = [
     new Card({
         cost: 1,
-        attack: 10,
-        shield: 3,
+        attack: 100,
+        shield: 30,
         part: 'mouth',
         species: 'bird',
         name: 'Bird Beak',
@@ -57,8 +57,8 @@ export const MOUTH_CARDS: Card<'bird', 'mouth'>[] = [
 export const BACK_CARDS: Card<'bird', 'back'>[] = [
     new Card({
         cost: 1,
-        attack: 11,
-        shield: 3,
+        attack: 110,
+        shield: 30,
         part: 'back',
         species: 'bird',
         name: 'Bird Wing',

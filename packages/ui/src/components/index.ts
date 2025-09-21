@@ -10,4 +10,5 @@ export * from './Input';
 export * from './Loading';
 export * from './Ripple';
 export * from './Stack';
+export * from './Tooltip';
 export * from './Typography';

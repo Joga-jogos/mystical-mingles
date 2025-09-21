@@ -7,18 +7,23 @@ import type Champion from '@mystical-mingles/engine/champion';
 import type { Species } from '@mystical-mingles/engine/species';
 import type { ActiveParts } from '@mystical-mingles/engine/parts';
 
+import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
+
 import Deck from '../Deck';
 import useGameControl from '../../useGameControl';
 
 import HandCardsByChampion from './components/HandCardsByChampion';
 
 export default function HUD({ children }: PropsWithChildren) {
-    const game = useGameControl();
+    const { game, me } = useGameControl();
 
+    const { endTurn } = useMatchmaking();
+
+    if (!me) { return; }
     if (!game) { return; }
 
     const handleChooseCard = (card: Card<Species, ActiveParts>, champion: Champion<Species>) => {
-        game.players[0].team.playCard(card, champion);
+        me.team.playCard(card, champion);
 
         game.update({
             players: [game.players[0], game.players[1]]
@@ -26,15 +31,17 @@ export default function HUD({ children }: PropsWithChildren) {
     };
 
     const removeFromHand = (champion: Champion<Species>) => {
-        game.players[0].team.resetHand(champion);
+        me.team.resetHand(champion);
 
         game.update({
             players: [game.players[0], game.players[1]]
         });
     };
 
-    const endTurn = () => {
-        game.getTurnActions();
+    const handleEndTurn = () => {
+        if (!endTurn) { return; }
+
+        endTurn(me);
     };
 
     return (
@@ -44,8 +51,19 @@ export default function HUD({ children }: PropsWithChildren) {
 
                 <Stack flexDirection="row" justifyContent="center">
                     {
-                        game.alive.map((champion, index) => (
-                            <Stack flexDirection="column" alignItems="center" key={champion.name} gap={5}>
+                        game.turnOrder.map((champion, index) => (
+                            <Stack
+                                flexDirection="column"
+                                alignItems="center"
+                                key={champion.name}
+                                gap={5}
+                                style={{
+                                    color: me.team.champions.some(c => c.id === champion.id)
+                                        ? 'var(--info)'
+                                        : 'var(--error)'
+                                }}
+                            >
+
                                 <div>{index + 1}</div>
                                 <div>{champion.name}</div>
                                 <HandCardsByChampion champion={champion} onRemoveFromHand={removeFromHand} />
@@ -53,26 +71,29 @@ export default function HUD({ children }: PropsWithChildren) {
                         ))
                     }
                 </Stack>
-
             </Stack>
+
             {children}
+
             <Stack flexDirection="column" alignItems="flex-end">
                 <div>
-                    <button onClick={endTurn}>Próximo turno</button>
+                    <button onClick={handleEndTurn}>Próximo turno</button>
                 </div>
                 <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
                     <div style={{ width: 200 }}>
-                        energy: {game.players[0].team.energies}/10
+                        energy: {me.team.energies}/10
                     </div>
                     <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
                         {
-                            game.players[0].team.priorityOrder.filter(a => a.stats.life > 0)
+                            game.turnOrder
+                                .filter(champion => me.team.champions.some(c => champion.id === c.id))
+                                .filter(a => a.isAlive)
                                 .map((champion) => (
                                     <Stack key={champion.id} flexDirection="column">
                                         <Deck
                                             champion={champion}
-                                            order={game.alive.findIndex(c => c.id === champion.id) + 1}
-                                            cards={game.players[0].team.deck[champion.id]}
+                                            order={game.turnOrder.findIndex(c => c.id === champion.id) + 1}
+                                            cards={me.team.deck[champion.id]}
                                             onChoose={(card) => handleChooseCard(card, champion)}
                                         />
                                     </Stack>

@@ -8,7 +8,7 @@ import type { ActiveParts } from '../parts';
 
 import DeckManager from './deckManager';
 import EnergyManager from './energyManager';
-import type { TeamOptions } from './interface';
+import type { Deck, TeamOptions } from './interface';
 
 export default class Team {
     public id: string;
@@ -25,28 +25,35 @@ export default class Team {
         this.id = id || uuid();
         this.champions = champions || this.champions;
 
-        this.energyManager = new EnergyManager(energy || 3);
+        this.energyManager = new EnergyManager(energy ?? 3);
         this.deckManager = new DeckManager(champions, deck, hand);
+
+        this.init();
     }
 
     get energies() { return this.energyManager.energies; }
 
     get deck() { return this.deckManager.deck; }
     get hand() { return this.deckManager.hand; }
+    set hand(hand: Deck) { this.deckManager.setHand(hand); }
 
     get alives() { return this.champions.filter((champion) => champion.isAlive); }
-
-    get priorityOrder() {
-        return this.champions.sort((a, b) => {
-            return a.stats.speed > b.stats.speed ? -1 : 1;
-        }).filter((ally) => ally.isAlive);
-    }
 
     get higherLife() { return higherThan(this.alives, 'stats.life'); }
     get higherSpeed() { return higherThan(this.alives, 'stats.speed'); }
 
     get lessLife() { return lessThan(this.alives, 'stats.life'); }
     get lessSpeed() { return lessThan(this.alives, 'stats.speed'); }
+
+    private init() {
+        Object.entries(this.deckManager.hand).map(([championId, cards]) => {
+            const champion = this.champions.find(champion => champion.id === championId);
+
+            if (!champion) { return; }
+
+            champion.shield = cards.reduce((acc, card) => acc += card.shield, 0);
+        });
+    }
 
     public playCard(card: Card<Species, ActiveParts>, champion: Champion<Species>) {
         const hasValidCost = (this.energyManager.energies - card.cost) >= 0;
@@ -55,11 +62,15 @@ export default class Team {
 
         this.deckManager.moveCardToHand(champion, card);
 
+        champion.shield += card.shield;
+
         this.energyManager.spend(card.cost);
     }
 
     public resetHand(champion: Champion<Species>) {
         const enegies = this.deckManager.discardHand(champion);
+
+        champion.shield = 0;
 
         this.energyManager.recover(enegies);
     }

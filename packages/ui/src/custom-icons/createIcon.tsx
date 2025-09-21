@@ -2,10 +2,10 @@ import type { ComponentType } from 'react';
 
 import { convertPathToColor, useTheme } from '../theme';
 
-import type { IconProps } from './interface';
+import type { CustomIconProps } from './interface';
 
-export default function createIcon(IconComponent: ComponentType<IconProps>) {
-    const EnhancedComponent: React.FC<IconProps> = ({
+export default function createIcon(IconComponent: ComponentType<CustomIconProps>) {
+    const EnhancedComponent: React.FC<CustomIconProps> = ({
         size = 16,
         color = 'primary.main',
         ...props
@@ -16,7 +16,7 @@ export default function createIcon(IconComponent: ComponentType<IconProps>) {
 
         return (
             <IconComponent
-                {...(props as IconProps)}
+                {...(props as CustomIconProps)}
                 style={{
                     color: c,
                     width: size,

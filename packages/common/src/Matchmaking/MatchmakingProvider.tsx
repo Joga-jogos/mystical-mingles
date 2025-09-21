@@ -1,27 +1,33 @@
-import { createContext, useMemo, useState, type PropsWithChildren } from 'react';
-import { useNavigate, generatePath } from 'react-router-dom';
+import { createContext, useMemo, useRef, useState, type PropsWithChildren } from 'react';
+import { useParams } from 'react-router-dom';
 
-import Team from '@mystical-mingles/engine/team';
-import Player from '@mystical-mingles/engine/player';
-import Mingle from '@mystical-mingles/engine/mingle';
-import Champion from '@mystical-mingles/engine/champion';
+import { uuid } from '@mystical-mingles/toolkit/uuid';
+
+import type Player from '@mystical-mingles/engine/player';
 import type { GameOptions } from '@mystical-mingles/engine/game';
 
+import { toGame } from '@mystical-mingles/services/matchmaking';
 import type { Unsubscribe } from '@mystical-mingles/services/db';
-import type { MatchmakingData, MatchmakingDeck, MatchmakingPlayerData } from '@mystical-mingles/services/matchmaking';
 import type MatchmakingServices from '@mystical-mingles/services/matchmaking';
-import { PlayerData } from '@mystical-mingles/services/matchmaking';
+import type { MatchmakingData, MatchmakingRound } from '@mystical-mingles/services/matchmaking';
+
+import * as toMatchmaking from './toMatchmaking';
 
 export interface MatchmakingContextConfig {
     matchmaking?: MatchmakingData;
     gameOptions?: GameOptions;
 
-    getMatchMaking?: (id: string) => Promise<void>;
+    leaveRoom?: () => void;
+    leaveRound?: () => void;
 
-    createMatchmaking?: (player: Player) => Promise<void>;
-    joinMatchmaking?: (roomId: string, player: Player) => Promise<void>;
+    getMatchMaking?: () => Promise<void>;
+    createMatchmaking?: (me: Player) => Promise<void>;
+    joinMatchmaking?: (roomId: string, me: Player) => Promise<void>;
 
-    subscriptionMatchmaking?: (roomId: string) => Unsubscribe;
+    endTurn?: (me: Player) => Promise<void>;
+
+    subscriptionMatchmaking?: (roomId: string, callback: (m: MatchmakingData) => void) => Unsubscribe;
+    subscriptionRounds?: (roomId: string, callback: (m: MatchmakingRound) => void) => Unsubscribe;
 }
 
 export const MatchmakingContext = createContext<MatchmakingContextConfig>({});
@@ -32,96 +38,59 @@ export function MatchmakingProvider({
 }: PropsWithChildren<{
     matchmakingServices: MatchmakingServices;
 }>) {
-    const navigate = useNavigate();
+    const { id } = useParams<{ id: string; }>();
 
     const [matchmaking, setMatchmaking] = useState<MatchmakingData>();
     const [gameOptions, setGameOptions] = useState<GameOptions>();
+
+    const unsubscribe = useRef<null | Unsubscribe>(null);
+    const unsubscribeRound = useRef<null | Unsubscribe>(null);
 
     const context = useMemo<MatchmakingContextConfig>(() => ({
         matchmaking,
         gameOptions,
 
-        getMatchMaking: (roomId) => getMatchMaking(roomId),
+        leaveRoom: () => leaveRoom(),
+        leaveRound: () => leaveRound(),
 
-        createMatchmaking: (player) => createMatchmaking(player),
-        joinMatchmaking: (roomId, player) => joinMatchmaking(roomId, player),
+        getMatchMaking: () => getMatchMaking(),
+        createMatchmaking: (me) => createMatchmaking(me),
+        joinMatchmaking: (roomId, me) => joinMatchmaking(roomId, me),
 
-        subscriptionMatchmaking: (roomId) => subscriptionMatchmaking(roomId),
-    }), [matchmaking, gameOptions]);
+        endTurn: (me) => endTurn(me),
 
-    const goToGame = (roomId: string) => {
-        navigate(generatePath('/game/:id', { id: roomId }));
-    };
+        subscriptionMatchmaking: (roomId, cb) => subscriptionMatchmaking(roomId, cb),
+        subscriptionRounds: (roomId, cb) => subscriptionRounds(roomId, cb),
+    }), [id, matchmaking, gameOptions]);
 
-    const map = (players: PlayerData<MatchmakingPlayerData>) => {
-        return Object.entries(players)
-            .map(([key, player]) => {
-                return new Player({
-                    id: key,
-                    team: new Team({
-                        name: player.team.name,
-                        champions: player.team.champions.map(champion => {
-                            const { coordinates, ...options } = champion;
+    const getMatchMaking = async () => {
+        if (!id) { return; }
 
-                            return new Champion({
-                                coordinates,
-                                mingle: new Mingle({
-                                    name: options.mingle.name,
-                                    species: options.mingle.species,
-                                    genes: options.mingle.genes,
-                                    color: options.mingle.color,
-                                    createdAt: options.mingle.createdAt,
-                                })
-                            });
-                        })
-                    })
-                });
-            });
-    };
+        const matchmaking = await matchmakingServices.get(id);
 
-    const getMatchMaking = async (id: string) => {
-        return matchmakingServices.get(id)
-            .then(res => {
-                if (!res) { throw new Error('Jogo não encontrado'); }
+        if (!matchmaking) { throw new Error('Jogo não encontrado'); }
 
-                setGameOptions({
-                    id,
-                    round: 1,
-                    createdAt: res.createdAt.toDate(),
-                    players: map(res.players)
-                });
-            });
-    };
+        const rounds = await matchmakingServices.getRounds(id);
 
-    const mapPlayerDeck = (player: Player): MatchmakingPlayerData => {
-        return {
-            team: {
-                name: player.team.name,
-                champions: player.team.champions.map(champion => champion.options)
-            },
-            deck: player.team.champions
-                .reduce<MatchmakingDeck>((acc, champion) => {
-                    acc[champion.id] = [
-                        champion.cards.back.options,
-                        champion.cards.horn.options,
-                        champion.cards.mouth.options,
-                        champion.cards.tail.options,
-                    ];
+        if (!rounds.length) { throw new Error('Rounds não encontrados'); }
 
-                    return acc;
-                }, {
-                    [player.team.champions[0].id]: [],
-                    [player.team.champions[1].id]: [],
-                    [player.team.champions[2].id]: [],
-                })
-        };
+        const lastRound = rounds.reverse()[0];
+
+        setGameOptions({
+            id,
+            round: 1,
+            priority: lastRound.priority,
+            createdAt: matchmaking.createdAt.toDate(),
+            players: toGame.mapPlayer(matchmaking.players, lastRound),
+        });
     };
 
     const createMatchmaking = async (player: Player) => {
         return matchmakingServices.create({
-            rounds: [],
+            status: 'waiting',
+            hash: uuid(),
             players: {
-                [player.id]: mapPlayerDeck(player)
+                [player.id]: toMatchmaking.mapTeam(player.team)
             }
         }).then(res => setMatchmaking(res));
     };
@@ -135,17 +104,54 @@ export function MatchmakingProvider({
             ...matchmaking,
             players: {
                 ...matchmaking.players,
-                [player.id]: mapPlayerDeck(player)
+                [player.id]: toMatchmaking.mapTeam(player.team)
             }
-        }).then(() => goToGame(roomId));
+        }).then(() => setMatchmaking(matchmaking));
     };
 
-    const subscriptionMatchmaking = (roomId: string) => {
-        return matchmakingServices.subscribe(roomId, (matchmaking) => {
-            if (Object.keys(matchmaking.players).length < 2) { return; }
+    const endTurn = async (me: Player) => {
+        if (!id) { return; }
+        if (!gameOptions) { return; }
 
-            goToGame(roomId);
+        const hand = toMatchmaking.mapHand(me.team.hand);
+        const deck = toMatchmaking.mapHand(me.team.deck);
+
+        return matchmakingServices.endTurn({
+            matchmakingId: id,
+            playerId: me.id,
+            roundId: gameOptions.round,
+            energy: me.team.energies,
+            hand,
+            deck,
         });
+    };
+
+    const subscriptionMatchmaking = (roomId: string, callback: (m: MatchmakingData) => void) => {
+        unsubscribe.current = matchmakingServices.subscribe(roomId, callback);
+
+        return unsubscribe.current;
+    };
+
+    const subscriptionRounds = (roomId: string, callback: (m: MatchmakingRound) => void) => {
+        unsubscribeRound.current = matchmakingServices.subscribeRounds(roomId, callback);
+
+        return unsubscribeRound.current;
+    };
+
+    const leaveRoom = () => {
+        if (!unsubscribe.current) { return; }
+
+        unsubscribe.current();
+        unsubscribe.current = null;
+
+        setMatchmaking(undefined);
+    };
+
+    const leaveRound = () => {
+        if (!unsubscribeRound.current) { return; }
+
+        unsubscribeRound.current();
+        unsubscribeRound.current = null;
     };
 
     return (

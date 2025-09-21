@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "joga-jogos";
+    src: url('../fonts/LuckiestGuy-Regular.ttf') format("truetype");
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "zuera";
+    src: url('../fonts/zuera.woff2') format("woff2");
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "poppins";
+    src: url('../fonts/Poppins-Regular.ttf') format("truetype");
+    font-style: normal;
+    font-display: swap;
+}
+

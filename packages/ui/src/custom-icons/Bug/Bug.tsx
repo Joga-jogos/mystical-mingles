@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import createIcon from '../createIcon';
-import type { IconProps } from '../interface';
+import type { CustomIconProps } from '../interface';
 
-function Bug(props: IconProps) {
+function Bug(props: CustomIconProps) {
     return (
         <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
             <path d="M17.117 6.244l.228 .076a5.5 5.5 0 0 1 1.24 9.738l-.063 .039l.02 .034a4 4 0 0 1 .101 3.533l-.093 .19a4 4 0 0 1 -5.55 1.608v-14.857a5.5 5.5 0 0 1 4.118 -.36"></path>

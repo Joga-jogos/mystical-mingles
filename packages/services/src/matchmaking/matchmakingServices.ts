@@ -1,10 +1,10 @@
-import { Timestamp } from 'firebase/firestore';
+import { arrayUnion, Timestamp } from 'firebase/firestore';
 
 import { uuid } from '@mystical-mingles/toolkit/uuid';
 
 import type DB from '../db';
 
-import type { MatchmakingData } from './interface';
+import type { MatchmakingData, MatchmakingDeck, MatchmakingRound } from './interface';
 
 export default class MatchmakingServices {
     private static PATH = 'matchmaking';
@@ -16,6 +16,44 @@ export default class MatchmakingServices {
             path: MatchmakingServices.PATH,
             pathSegments: [],
             filters: [{ field: 'id', operator: '==', value: roomId }]
+        });
+    }
+
+    async getRounds(roomId: string) {
+        return this.db.getList<MatchmakingRound>({
+            path: MatchmakingServices.PATH,
+            pathSegments: [roomId, 'rounds'],
+            filters: []
+        });
+    }
+
+    async endTurn(data: {
+        roundId: number,
+        playerId: string,
+        matchmakingId: string,
+        energy: number;
+        hand: MatchmakingDeck;
+        deck: MatchmakingDeck;
+    }) {
+        const { roundId, playerId, matchmakingId, hand, deck, energy } = data;
+
+        const path = `players.${playerId}`;
+
+        await this.db.update({
+            path: MatchmakingServices.PATH,
+            pathSegments: [matchmakingId, 'rounds', `Round${roundId}`],
+            data: {
+                [`${path}.hand`]: hand,
+                [`${path}.deck`]: deck,
+                [`${path}.energy`]: energy,
+                'whoHasAlreadyPlayed': arrayUnion(playerId),
+            }
+        });
+
+        return this.db.update({
+            path: MatchmakingServices.PATH,
+            pathSegments: [matchmakingId],
+            data: { status: 'pending', hash: uuid() }
         });
     }
 
@@ -37,7 +75,7 @@ export default class MatchmakingServices {
 
     async join(data: MatchmakingData) {
         return this.db.setItem<MatchmakingData>({
-            data: data,
+            data,
             path: MatchmakingServices.PATH,
             pathSegments: [data.id]
         });
@@ -48,6 +86,14 @@ export default class MatchmakingServices {
             path: MatchmakingServices.PATH,
             pathSegments: [],
             filters: [{ field: 'id', operator: '==', value: roomId }]
+        }, callback);
+    }
+
+    subscribeRounds(roomId: string, callback: (data: MatchmakingRound) => void) {
+        return this.db.subscribe<MatchmakingRound>({
+            path: MatchmakingServices.PATH,
+            pathSegments: [roomId, 'rounds'],
+            filters: []
         }, callback);
     }
 }

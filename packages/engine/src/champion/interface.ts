@@ -6,7 +6,7 @@ import type { MingleOptions } from '../mingle';
 import type { Buff, Debuff, BuffAndDebuff } from '../effect';
 
 export type Coordinates = { x: IntRange<0, 6>; y: IntRange<0, 4>; };
-export type SetOfEffects<E extends BuffAndDebuff> = Partial<{ [key in E]: number; }>
+export type SetOfEffects<E extends BuffAndDebuff = BuffAndDebuff> = Partial<{ [key in E]: number; }>
 
 export interface ChampionOptions extends MingleOptions<Species> {
     id?: string;

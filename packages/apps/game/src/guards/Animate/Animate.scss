@@ -1,0 +1,158 @@
+$danger: #f73434;
+$poison: #a361c3;
+$contrast: #fff;
+$emphasis: #fe8d34;
+
+@mixin messageText($color, $contrast-color: $contrast) {
+    left: 50%;
+    z-index: 100;
+    font-size: 2rem;
+    font-family: "zuera";
+    text-shadow: 2px 2px 2px $contrast-color;
+    transform: translateX(-50%);
+    position: absolute;
+    width: max-content;
+    color: $color;
+}
+
+@keyframes linearAnimation {
+    0% {
+        top: -30px;
+        opacity: 1;
+    }
+
+    100% {
+        top: -80px;
+        opacity: 0;
+    }
+}
+
+@keyframes scaleAnimationSoft {
+    0% {
+        font-size: 2rem;
+    }
+
+    50% {
+        font-size: 2.2rem;
+    }
+
+    100% {
+        font-size: 2rem;
+    }
+}
+
+@keyframes scaleAnimationHard {
+    0% {
+        font-size: 2rem;
+    }
+
+    50% {
+        font-size: 3rem;
+    }
+
+    100% {
+        font-size: 2rem;
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translatey(0px);
+    }
+
+    50% {
+        transform: translatey(-5px);
+    }
+
+    100% {
+        transform: translatey(0px);
+    }
+}
+
+@keyframes scaling {
+    0% {
+        rx: 68.94px;
+    }
+
+    50% {
+        rx: 75px;
+    }
+
+    100% {
+        rx: 68.94px;
+    }
+}
+
+@keyframes attack {
+    0% {
+        transform: translateX(0px);
+    }
+
+    20% {
+        transform: translateX(-15px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes blinker {
+    10% {
+        opacity: 0;
+        filter: hue-rotate(150deg);
+        transform: translateX(-15px);
+    }
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.damage {
+    @include messageText($danger);
+    animation:
+        linearAnimation 1.5s,
+        scaleAnimationSoft 1.5s;
+}
+
+.critical {
+    @include messageText($danger, $emphasis);
+    animation:
+        linearAnimation 1.5s,
+}
+
+.rise-damage {
+    @include messageText($emphasis);
+    animation: linearAnimation 1.5s;
+}
+
+.float-animation {
+    animation: float 1.5s ease-in-out infinite;
+}
+
+.apply-damage {
+    animation: attack 0.3s forwards;
+}
+
+.take-damage {
+    animation: blinker 0.6s linear;
+}

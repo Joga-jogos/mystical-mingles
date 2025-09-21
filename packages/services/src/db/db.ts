@@ -14,9 +14,8 @@ import {
     deleteDoc,
     updateDoc,
     collection,
-    arrayUnion,
     onSnapshot,
-    runTransaction
+    runTransaction,
 } from 'firebase/firestore';
 
 import { Path, ArrayOrObject } from '@mystical-mingles/toolkit/interface';
@@ -38,11 +37,10 @@ type CollectionData<
     }>;
 };
 
-type CollectionSegmentData<F extends Field, S> = {
+type CollectionSegmentData = {
     path: string;
     pathSegments: string[];
-    pathToSegment: Path<F>;
-    dataSegment: S;
+    data: any;
 };
 
 type CollectionWithData<F extends Field> = Omit<CollectionData<F>, 'filters'>;
@@ -89,17 +87,14 @@ export default class DB {
             });
     }
 
-    public async insert<F extends Field, S>({
+    public async update({
         path,
-        pathToSegment,
-        dataSegment,
         pathSegments,
-    }: CollectionSegmentData<F, S>) {
+        data,
+    }: CollectionSegmentData) {
         const ref = doc(this.db, path, ...pathSegments);
 
-        updateDoc(ref, {
-            [pathToSegment]: arrayUnion(dataSegment)
-        });
+        updateDoc(ref, data);
     }
 
     public async transaction<F extends Field>() {

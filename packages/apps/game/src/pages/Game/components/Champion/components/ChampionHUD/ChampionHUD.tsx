@@ -1,0 +1,43 @@
+import Stack from '@mystical-mingles/ui/components/Stack';
+import Typography from '@mystical-mingles/ui/components/Typography';
+import Shield from '@mystical-mingles/ui/custom-icons/Shield';
+
+import type Champion from '@mystical-mingles/engine/champion';
+import type { Species } from '@mystical-mingles/engine/species';
+
+import { useSpecies } from '@mystical-mingles/common/Species';
+
+import './ChampionHUD.scss';
+
+interface ChampionHUDProps {
+    champion: Champion<Species>;
+}
+
+export default function ChampionHUD({ champion }: ChampionHUDProps) {
+    const { color, Icon } = useSpecies(champion.species);
+
+    return (
+        <div className="hud">
+            <Stack gap={4} flexDirection="row" alignItems="center">
+                <div className="hud__shield">
+                    <Shield className="hud__shield__icon" size={30} color="info.main" />
+                    <Typography className="hud__shield__value">
+                        {champion.shield}
+                    </Typography>
+                </div>
+                <Stack gap={6} alignItems="center" className="hud__life">
+                    <div className="hud__life__species" style={{ backgroundColor: color }}>
+                        <Icon color="background.default" />
+                    </div>
+                    <Typography variant="body2" style={{ fontWeight: 600 }}>{champion.life}</Typography>
+                    <div className="hud__life-bar">
+                        <div className="hud__life-bar__blood" style={{
+                            width: `${(champion.life / (champion.totalLife)) * 100}%`,
+                            backgroundColor: champion.life > champion.totalLife / 2 ? '#31c957' : '#f73434'
+                        }} />
+                    </div>
+                </Stack>
+            </Stack>
+        </div>
+    );
+}

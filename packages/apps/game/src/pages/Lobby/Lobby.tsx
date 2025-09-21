@@ -1,32 +1,35 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, generatePath } from 'react-router-dom';
 
 import Icon from '@mystical-mingles/ui/components/Icon';
 import Stack from '@mystical-mingles/ui/components/Stack';
+import Input from '@mystical-mingles/ui/components/Input';
 import Button from '@mystical-mingles/ui/components/Button';
 import BugIcon from '@mystical-mingles/ui/custom-icons/Bug';
 import Loading from '@mystical-mingles/ui/components/Loading';
 import Typography from '@mystical-mingles/ui/components/Typography';
 import { Grid, GridItem } from '@mystical-mingles/ui/components/Grid';
 import { Form, Control, useForm, FormControl } from '@mystical-mingles/ui/components/Form';
-import Input from '@mystical-mingles/ui/components/Input';
 
 import logger from '@mystical-mingles/toolkit/logger';
 import { getFilledArray } from '@mystical-mingles/toolkit/array';
 
-import type { Coordinates } from '@mystical-mingles/engine/champion';
 import Player from '@mystical-mingles/engine/player';
 import Champion from '@mystical-mingles/engine/champion';
 import { generateMingle } from '@mystical-mingles/engine/mingle';
 import { generateTeamName } from '@mystical-mingles/engine/team';
+import type { Coordinates } from '@mystical-mingles/engine/champion';
 
+import { useAuth } from '@mystical-mingles/common/Auth';
 import { usePlayer } from '@mystical-mingles/common/Player';
 import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
-import { useAuth } from '@mystical-mingles/common/Auth';
 
 export default function Lobby() {
+    const navigate = useNavigate();
+
     const { user } = useAuth();
-    const { matchmaking, createMatchmaking, joinMatchmaking, subscriptionMatchmaking } = useMatchmaking();
     const { mingles, teams, createMingle, createTeam, selectedTeam } = usePlayer();
+    const { matchmaking, leaveRoom, createMatchmaking, joinMatchmaking, subscriptionMatchmaking } = useMatchmaking();
 
     const [formGroup] = useForm<{ roomId: string }>({
         form: {
@@ -39,31 +42,45 @@ export default function Lobby() {
 
     const [isWaitingMatchMaking, setIsWaitingMatchMaking] = useState(false);
 
-    const [loading, setLoading] = useState({
-        mingle: false,
-        team: false
-    });
+    const [loading, setLoading] = useState({ mingle: false, team: false });
 
     useEffect(() => {
+        if (!leaveRoom) { return; }
         if (!matchmaking) { return; }
         if (!isWaitingMatchMaking) { return; }
         if (!subscriptionMatchmaking) { return; }
 
-        const unsubscribe = subscriptionMatchmaking(matchmaking.id);
+        subscriptionMatchmaking(matchmaking.id, (matchmaking) => {
+            if (matchmaking.status === 'waiting') { return; }
 
-        return () => { unsubscribe(); };
+            goToGame(matchmaking.id);
+        });
+
+        return () => { leaveRoom(); };
     }, [isWaitingMatchMaking]);
+
+    const goToGame = (roomId: string) => {
+        navigate(generatePath('/game/:id', { id: roomId }));
+    };
+
+    const handleLeaveRoom = () => {
+        if (!leaveRoom) { return; }
+
+        leaveRoom();
+        setIsWaitingMatchMaking(false);
+    };
 
     const handleJoinMatchmaking = async (roomId: string) => {
         if (!joinMatchmaking) { return; }
         if (!user) { return; }
 
         const player = new Player({
-            id: user.email,
+            id: user.id,
             team: selectedTeam(teams[0].name)
         });
 
-        joinMatchmaking(roomId, player);
+        return joinMatchmaking(roomId, player)
+            .then(() => setIsWaitingMatchMaking(true));
     };
 
     const handleCreateMatchmaking = () => {
@@ -71,11 +88,11 @@ export default function Lobby() {
         if (!user) { return; }
 
         const player = new Player({
-            id: user.email,
+            id: user.id,
             team: selectedTeam(teams[0].name)
         });
 
-        createMatchmaking(player)
+        return createMatchmaking(player)
             .then(() => setIsWaitingMatchMaking(true));
     };
 
@@ -110,12 +127,15 @@ export default function Lobby() {
             .finally(() => setLoading(prev => ({ ...prev, team: false })));
     };
 
-    if (isWaitingMatchMaking) {
+    if (isWaitingMatchMaking && matchmaking) {
         return (
             <Stack flexDirection="column" alignItems="center" justifyContent="center" style={{ height: '100vh' }}>
                 <Typography variant="h3">Aguardando oponente</Typography>
+                <Typography variant="body1">{matchmaking.id}</Typography>
                 <Loading size={50} />
-                <Button variant="outlined">Sair da fila</Button>
+                <Button variant="outlined" onClick={handleLeaveRoom}>
+                    Sair da fila
+                </Button>
             </Stack>
         );
     }

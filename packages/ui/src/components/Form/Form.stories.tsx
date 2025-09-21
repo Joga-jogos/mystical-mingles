@@ -2,17 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import Input from '@/components/Input';
 import Button from '@/components/Button';
-import { Select, Option } from '@/components/Select';
-import { Card, CardContent } from '@/components/Card';
 
-import Form from './Form';
 import Icon from '../Icon';
 import Stack from '../Stack';
+import ButtonIcon from '../ButtonIcon';
+
+import Form from './Form';
 import Control from './Control';
 import useForm from './useForm';
-import ButtonIcon from '../ButtonIcon';
 import FormControl from './formControl';
-import ColorPicker from '../ColorPicker';
 
 const meta: Meta<typeof Form> = {
     title: 'components/Form',
@@ -68,165 +66,129 @@ export const Template: StoryObj<typeof Form> = {
 
         return (
             <Form formGroup={formGroup} debug>
-                <Card>
-                    <CardContent>
-                        <Control
-                            controlName="tel"
-                            field={(control) => <Input
-                                fullWidth
-                                gutterBottom
-                                label="tel"
-                                maxLength={15}
-                                placeholder="tel"
-                                value={control.masked}
-                                error={control.isInvalid}
-                                helperText={control.messageError}
-                            />}
-                        />
-                        <Control
-                            controlName="name"
-                            field={(control) => <Input
-                                fullWidth
-                                gutterBottom
-                                label="name"
-                                placeholder="name"
-                                value={control.value}
-                                error={control.isInvalid}
-                                helperText={control.messageError}
-                            />}
-                        />
-                        <Control
-                            controlName="email"
-                            field={(control) => <Input
-                                fullWidth
-                                gutterBottom
-                                label="email"
-                                placeholder="email"
-                                value={control.value}
-                                error={control.isInvalid}
-                                helperText={control.messageError}
-                            />}
-                        />
-                        <Control
-                            controlName="options"
-                            action="onChange"
-                            field={(control) => (
-                                <Select
-                                    fullWidth
-                                    gutterBottom
-                                    label="options"
-                                    value={control.value}
-                                    error={control.isInvalid}
-                                    helperText={control.messageError}
-                                >
-                                    <Option value="1">Option 1</Option>
-                                    <Option value="2">Option 2</Option>
-                                    <Option value="3">Option 3</Option>
-                                    <Option value="4">Option 4</Option>
-                                </Select>
-                            )}
-                        />
-                        <Control
-                            controlName="password"
-                            field={(control) => <Input
-                                fullWidth
-                                gutterBottom
-                                label="password"
-                                type="password"
-                                placeholder="password"
-                                value={control.value}
-                                error={control.isInvalid}
-                                helperText={control.messageError}
-                                endIcon={
-                                    <ButtonIcon>
-                                        <Icon name="eye" />
-                                    </ButtonIcon>
-                                }
-                            />}
-                        />
-                        <Control
-                            controlName="confirmPassword"
-                            field={(control) => <Input
-                                required
-                                fullWidth
-                                gutterBottom
-                                label="confirmPassword"
-                                type="password"
-                                placeholder="confirmPassword"
-                                value={control.value}
-                                error={control.isInvalid}
-                                helperText={control.messageError}
-                                endIcon={
-                                    <ButtonIcon>
-                                        <Icon name="eye" />
-                                    </ButtonIcon>
-                                }
-                            />}
-                        />
-                        <Control
-                            controlName="confirmPassword"
-                            field={(control) => <Input
-                                required
-                                fullWidth
-                                gutterBottom
-                                label="confirmPassword"
-                                type="password"
-                                placeholder="confirmPassword"
-                                value={control.value}
-                                error={control.isInvalid}
-                                helperText={control.messageError}
-                                endIcon={
-                                    <ButtonIcon>
-                                        <Icon name="eye" />
-                                    </ButtonIcon>
-                                }
-                            />}
-                        />
-                        <Control
-                            controlName="date"
-                            field={(control) => <Input
-                                fullWidth
-                                gutterBottom
-                                label="Date"
-                                type="date"
-                                placeholder="date"
-                                value={control.value}
-                                error={control.isInvalid}
-                                helperText={control.messageError}
-                            />}
-                        />
-                        <Control
-                            controlName="color"
-                            action="onChange"
-                            field={(control) => <ColorPicker
-                                fullWidth
-                                gutterBottom
-                                label="Color"
-                                value={control.value}
-                                error={control.isInvalid}
-                                required={control.required}
-                                helperText={control.messageError}
-                            />}
-                        />
-                        <Control
-                            controlName="money"
-                            field={(control) => <Input
-                                fullWidth
-                                gutterBottom
-                                label="Money"
-                                type="tel"
-                                value={control.masked}
-                                error={control.isInvalid}
-                                required={control.required}
-                                helperText={control.messageError}
-                            />}
-                        />
+                <Control
+                    controlName="tel"
+                    field={(control) => <Input
+                        fullWidth
+                        gutterBottom
+                        label="tel"
+                        maxLength={15}
+                        placeholder="tel"
+                        value={control.masked}
+                        error={control.isInvalid}
+                        helperText={control.messageError}
+                    />}
+                />
+                <Control
+                    controlName="name"
+                    field={(control) => <Input
+                        fullWidth
+                        gutterBottom
+                        label="name"
+                        placeholder="name"
+                        value={control.value}
+                        error={control.isInvalid}
+                        helperText={control.messageError}
+                    />}
+                />
+                <Control
+                    controlName="email"
+                    field={(control) => <Input
+                        fullWidth
+                        gutterBottom
+                        label="email"
+                        placeholder="email"
+                        value={control.value}
+                        error={control.isInvalid}
+                        helperText={control.messageError}
+                    />}
+                />
+                <Control
+                    controlName="password"
+                    field={(control) => <Input
+                        fullWidth
+                        gutterBottom
+                        label="password"
+                        type="password"
+                        placeholder="password"
+                        value={control.value}
+                        error={control.isInvalid}
+                        helperText={control.messageError}
+                        endIcon={
+                            <ButtonIcon>
+                                <Icon name="eye" />
+                            </ButtonIcon>
+                        }
+                    />}
+                />
+                <Control
+                    controlName="confirmPassword"
+                    field={(control) => <Input
+                        required
+                        fullWidth
+                        gutterBottom
+                        label="confirmPassword"
+                        type="password"
+                        placeholder="confirmPassword"
+                        value={control.value}
+                        error={control.isInvalid}
+                        helperText={control.messageError}
+                        endIcon={
+                            <ButtonIcon>
+                                <Icon name="eye" />
+                            </ButtonIcon>
+                        }
+                    />}
+                />
+                <Control
+                    controlName="confirmPassword"
+                    field={(control) => <Input
+                        required
+                        fullWidth
+                        gutterBottom
+                        label="confirmPassword"
+                        type="password"
+                        placeholder="confirmPassword"
+                        value={control.value}
+                        error={control.isInvalid}
+                        helperText={control.messageError}
+                        endIcon={
+                            <ButtonIcon>
+                                <Icon name="eye" />
+                            </ButtonIcon>
+                        }
+                    />}
+                />
+                <Control
+                    controlName="date"
+                    field={(control) => <Input
+                        fullWidth
+                        gutterBottom
+                        label="Date"
+                        type="date"
+                        placeholder="date"
+                        value={control.value}
+                        error={control.isInvalid}
+                        helperText={control.messageError}
+                    />}
+                />
+                <Control
+                    controlName="money"
+                    field={(control) => <Input
+                        fullWidth
+                        gutterBottom
+                        label="Money"
+                        type="tel"
+                        value={control.masked}
+                        error={control.isInvalid}
+                        required={control.required}
+                        helperText={control.messageError}
+                    />}
+                />
 
-                        <Stack orientation="row" justifyContent="flex-end">
-                            <Button type="submit">Submit</Button>
-                        </Stack>
-                    </CardContent>
-                </Card>
+                <Stack flexDirection="row" justifyContent="flex-end">
+                    <Button type="submit">Submit</Button>
+                </Stack>
             </Form>
         );
     }
