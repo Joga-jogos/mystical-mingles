@@ -1,19 +1,15 @@
 import { Timestamp } from 'firebase-admin/firestore';
+import { logger } from 'firebase-functions';
 
-import type Champion from '@mystical-mingles/engine/champion';
-import type { Species } from '@mystical-mingles/engine/species';
+import Game from '@mystical-mingles/engine/game';
 
 import type {
-    ByPlayer,
     MatchmakingData,
     MatchmakingRound,
-    MatchMakingRoundPlayer
 } from '@mystical-mingles/services/matchmaking';
-import { toGame } from '@mystical-mingles/services/matchmaking';
+import { toGame, toMatchmaking } from '@mystical-mingles/services/matchmaking';
 
 import type { DB } from '../core';
-import { buyCards } from '../system/buyCards';
-import { sortChampions } from '../system/getPriority';
 
 type InitGame = {
     id: string;
@@ -22,42 +18,32 @@ type InitGame = {
 }
 
 export async function initGame({ id, matchmaking, db }: InitGame) {
-    const players = Object
-        .entries(matchmaking.players)
-        .reduce<ByPlayer<MatchMakingRoundPlayer>>((acc, [playerId, data]) => {
-            const player: MatchMakingRoundPlayer = {
-                deck: buyCards({
-                    count: 12,
-                    deck: data.deck,
-                    champions: data.team.champions,
-                }),
-                hand: {},
-                death: {},
-                energy: 3,
-                championsState: {}
-            };
+    const players = toGame.mapPlayer(matchmaking.players);
 
-            acc[playerId] = player;
+    const game = new Game({
+        id: '',
+        round: 1,
+        createdAt: new Date(),
+        priority: [],
+        players
+    });
 
-            return acc;
-        }, {} as ByPlayer<MatchMakingRoundPlayer>);
+    game.setPriority();
 
-    const priority = sortChampions(Object
-        .values(matchmaking.players)
-        .reduce<Champion<Species>[]>((acc, player) => {
-            acc = [...acc, ...toGame.mapChampions(player.team.champions)];
+    game.players[0].team.deckManager.buyCards(6);
+    game.players[1].team.deckManager.buyCards(6);
 
-            return acc;
-        }, [])).map(c => c.id);
+    logger.debug('>>> cartas escolhidas', game.players[1].team.deckManager.hand);
 
     await db.setItem<MatchmakingRound>({
         data: {
             id: 1,
-            updatedAt: Timestamp.fromDate(new Date()),
-            whoHasAlreadyPlayed: [],
             actions: [],
-            priority,
-            players
+            whoSawTheAnimation: [],
+            whoHasAlreadyPlayed: [],
+            priority: game.priority,
+            updatedAt: Timestamp.fromDate(new Date()),
+            players: toMatchmaking.mapPlayerRound(game.players)
         },
         segments: [
             { collection: 'matchmaking', doc: id },

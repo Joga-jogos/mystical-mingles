@@ -43,16 +43,18 @@ export function mapChampions(champions: ChampionOptionsWithMingleOptions<Species
     });
 }
 
-export function mapPlayer(players: ByPlayer<MatchmakingPlayerData>, round: MatchmakingRound) {
+export function mapPlayer(players: ByPlayer<MatchmakingPlayerData>, round?: MatchmakingRound) {
     return Object.entries(players)
         .map(([key, player]) => {
             return new Player({
                 id: key,
                 team: new Team({
                     name: player.team.name,
-                    energy: round.players[key].energy,
-                    deck: mapDeck(player.team.champions, round.players[key].deck),
-                    hand: mapDeck(player.team.champions, round.players[key].hand),
+                    energy: round ? round.players[key].energy : 3,
+                    deck: mapDeck(player.team.champions, player.deck),
+                    death: mapDeck(player.team.champions, round ? round.players[key].death : {}),
+                    inPlay: mapDeck(player.team.champions, round ? round.players[key].inPlay : {}),
+                    hand: mapDeck(player.team.champions, round ? round.players[key].hand : {}),
                     champions: mapChampions(player.team.champions),
                 })
             });

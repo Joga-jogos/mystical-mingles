@@ -1,7 +1,8 @@
 import type { Species } from '@mystical-mingles/engine';
 import type Champion from '@mystical-mingles/engine/champion';
 
-export function sortChampions(champions: Champion<Species>[]): Champion<Species>[] {
+export function getPriority(champions: Champion<Species>[]) {
+
     // cria uma cópia para não mutar o array original
     const sorted = [...champions].sort((a, b) => {
         // 1. mais rápidos primeiro
@@ -18,5 +19,5 @@ export function sortChampions(champions: Champion<Species>[]): Champion<Species>
         return Math.random() - 0.5;
     });
 
-    return sorted;
+    return sorted.map(c => c.id);
 }

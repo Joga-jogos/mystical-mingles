@@ -47,4 +47,24 @@ export default class Game implements GameOptions {
     set update(fn: (values: Partial<GameOptions>) => any) {
         this._update = fn;
     }
+
+    setPriority() {
+        // cria uma cópia para não mutar o array original
+        const sorted = [...this.champions].sort((a, b) => {
+            // 1. mais rápidos primeiro
+            if (a.stats.speed !== b.stats.speed) {
+                return b.stats.speed - a.stats.speed;
+            }
+
+            // 2. se mesma velocidade, menor vida primeiro
+            if (a.life !== b.life) {
+                return a.life - b.life;
+            }
+
+            // 3. se empatar em tudo, ordem aleatória
+            return Math.random() - 0.5;
+        });
+
+        this.priority = sorted.map(c => c.id);
+    }
 }

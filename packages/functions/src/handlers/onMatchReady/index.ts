@@ -1,1 +1,1 @@
-export * from './onMatchReady';
+export { default } from './onMatchReady';

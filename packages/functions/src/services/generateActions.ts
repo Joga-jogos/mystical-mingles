@@ -1,5 +1,3 @@
-import { logger } from 'firebase-functions';
-
 import Game from '@mystical-mingles/engine/game';
 
 import type { MatchmakingData, MatchmakingRound, MatchmakingAction } from '@mystical-mingles/services/matchmaking';
@@ -38,7 +36,8 @@ export function generateActions({ matchmaking, round, db }: GenerateActions) {
         if (!cards) { return; }
 
         const actions = cards.map<MatchmakingAction>(cardOptions => {
-            const card = me.team.hand[champion.id].find(card => card.name === cardOptions.name);
+            const card = me.team.deckManager.inPlay[champion.id]
+                .find(card => card.name === cardOptions.name);
             // const isMelee = card.type === 'melee';
 
             const target = getTarget({

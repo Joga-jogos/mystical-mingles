@@ -5,14 +5,14 @@ import useGameControl from '@/pages/Game/useGameControl';
 
 import CardComponent from '../../../Card';
 
-import './HandCardsByChampion.scss';
+import './InPlayCardsByChampion.scss';
 
-interface HandCardsByChampionProps {
+interface InPlayCardsByChampionProps {
     champion: Champion<Species>;
     onRemoveFromHand: (champion: Champion<Species>) => void;
 }
 
-export default function HandCardsByChampion({ champion, onRemoveFromHand }: HandCardsByChampionProps) {
+export default function InPlayCardsByChampion({ champion, onRemoveFromHand }: InPlayCardsByChampionProps) {
     const { game, me, enemy } = useGameControl();
 
     if (!game) { return; }
@@ -24,8 +24,8 @@ export default function HandCardsByChampion({ champion, onRemoveFromHand }: Hand
     return (
         <div className="hand-cards">
             {
-                me.team.hand[champion.id] &&
-                me.team.hand[champion.id].map((card, index) => (
+                me.team.deckManager.inPlay[champion.id] &&
+                me.team.deckManager.inPlay[champion.id].map((card, index) => (
                     <button
                         key={card.id}
                         className="hand-cards__card"
@@ -37,8 +37,8 @@ export default function HandCardsByChampion({ champion, onRemoveFromHand }: Hand
                 ))
             }
             {
-                enemy.team.hand[champion.id] &&
-                enemy.team.hand[champion.id].map((card, index) => (
+                enemy.team.deckManager.inPlay[champion.id] &&
+                enemy.team.deckManager.inPlay[champion.id].map((card, index) => (
                     <button
                         key={card.id}
                         className="hand-cards__card"

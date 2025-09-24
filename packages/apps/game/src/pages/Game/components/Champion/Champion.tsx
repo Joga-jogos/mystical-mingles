@@ -10,6 +10,8 @@ import useGameControl from '../../useGameControl';
 import ChapionHUD from './components/ChampionHUD';
 
 import './Champion.scss';
+import useAnimate from '@/providers/AnimateProvider/useAnimate';
+import { joinClass } from '@mystical-mingles/ui/utils';
 
 interface ChampionProps {
     champion: Champion<Species>;
@@ -17,6 +19,8 @@ interface ChampionProps {
 }
 
 export default function ChampionComponent({ champion, direction = 'left' }: ChampionProps) {
+    const { actor } = useAnimate();
+
     const { game } = useGameControl();
 
     if (!game) { return; }
@@ -30,7 +34,15 @@ export default function ChampionComponent({ champion, direction = 'left' }: Cham
                 </pre>
             }
         >
-            <div className="champion" id={champion.id}>
+            <div
+                className={
+                    joinClass([
+                        'champion',
+                        (actor?.id === champion.id) && 'champion--active'
+                    ])
+                }
+                id={champion.id}
+            >
                 {
                     champion.isAlive && (
                         <>

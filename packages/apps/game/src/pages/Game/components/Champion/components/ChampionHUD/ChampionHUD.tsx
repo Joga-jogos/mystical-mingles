@@ -19,12 +19,16 @@ export default function ChampionHUD({ champion }: ChampionHUDProps) {
     return (
         <div className="hud">
             <Stack gap={4} flexDirection="row" alignItems="center">
-                <div className="hud__shield">
-                    <Shield className="hud__shield__icon" size={30} color="info.main" />
-                    <Typography className="hud__shield__value">
-                        {champion.shield}
-                    </Typography>
-                </div>
+                {
+                    champion.shield && (
+                        <div className="hud__shield">
+                            <Shield className="hud__shield__icon" size={30} color="info.main" />
+                            <Typography className="hud__shield__value">
+                                {champion.shield}
+                            </Typography>
+                        </div>
+                    )
+                }
                 <Stack gap={6} alignItems="center" className="hud__life">
                     <div className="hud__life__species" style={{ backgroundColor: color }}>
                         <Icon color="background.default" />

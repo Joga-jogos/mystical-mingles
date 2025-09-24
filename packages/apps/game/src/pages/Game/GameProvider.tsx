@@ -10,7 +10,7 @@ import type { MatchmakingRound } from '@mystical-mingles/services/matchmaking';
 import { useAuth } from '@mystical-mingles/common/Auth';
 import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
 
-import Animate from '@/guards/Animate';
+import AnimateProvider from '@/providers/AnimateProvider';
 
 type GameContextConfig = {
     game?: Game;
@@ -51,14 +51,14 @@ export default function GameProvider({ game, children }: PropsWithChildren<{ gam
 
             if (round.whoHasAlreadyPlayed.length !== 2) { return; }
 
-            const enemyHand: Deck = Object.entries(round.players[context.enemy.id].hand)
+            const enemyInPlay: Deck = Object.entries(round.players[context.enemy.id].hand)
                 .reduce<Deck>((acc, [id, cards]) => {
                     acc[id] = cards.map(card => new Card(card));
 
                     return acc;
                 }, {});
 
-            context.enemy.team.hand = enemyHand;
+            context.enemy.team.deckManager.setInPlay(enemyInPlay);
 
             game.update({
                 players: [context.me, context.enemy],
@@ -72,8 +72,9 @@ export default function GameProvider({ game, children }: PropsWithChildren<{ gam
 
     return (
         <GameContext.Provider value={context}>
-            <Animate />
-            {children}
+            <AnimateProvider>
+                {children}
+            </AnimateProvider>
         </GameContext.Provider>
     );
 }

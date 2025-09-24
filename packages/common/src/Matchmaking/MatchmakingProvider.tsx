@@ -6,12 +6,10 @@ import { uuid } from '@mystical-mingles/toolkit/uuid';
 import type Player from '@mystical-mingles/engine/player';
 import type { GameOptions } from '@mystical-mingles/engine/game';
 
-import { toGame } from '@mystical-mingles/services/matchmaking';
 import type { Unsubscribe } from '@mystical-mingles/services/db';
 import type MatchmakingServices from '@mystical-mingles/services/matchmaking';
 import type { MatchmakingData, MatchmakingRound } from '@mystical-mingles/services/matchmaking';
-
-import * as toMatchmaking from './toMatchmaking';
+import { toGame, toMatchmaking } from '@mystical-mingles/services/matchmaking';
 
 export interface MatchmakingContextConfig {
     matchmaking?: MatchmakingData;
@@ -113,16 +111,16 @@ export function MatchmakingProvider({
         if (!id) { return; }
         if (!gameOptions) { return; }
 
-        const hand = toMatchmaking.mapHand(me.team.hand);
-        const deck = toMatchmaking.mapHand(me.team.deck);
+        const inPlay = toMatchmaking.mapDeck(me.team.deckManager.inPlay);
+        const hand = toMatchmaking.mapDeck(me.team.deckManager.hand);
 
         return matchmakingServices.endTurn({
             matchmakingId: id,
             playerId: me.id,
             roundId: gameOptions.round,
-            energy: me.team.energies,
+            energy: me.team.energyManager.energies,
             hand,
-            deck,
+            inPlay,
         });
     };
 

@@ -14,5 +14,6 @@ export interface TeamOptions {
     deck?: Deck;
     hand?: Deck;
     death?: Deck;
+    inPlay?: Deck;
     champions: Champion<Species>[];
 }

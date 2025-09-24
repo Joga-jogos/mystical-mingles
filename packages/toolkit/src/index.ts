@@ -5,6 +5,7 @@ export * from './jwt';
 export * from './logger';
 export * from './mask';
 export * from './number';
+export * from './object';
 export * from './promise';
 export * from './url';
 export * from './uuid';

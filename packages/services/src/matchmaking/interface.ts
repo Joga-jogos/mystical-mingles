@@ -8,7 +8,7 @@ import type { ChampionOptionsWithMingleOptions, SetOfEffects } from '@mystical-m
 export type ByPlayer<T> = { [playerId: string]: T }
 export type ByChampion<T> = { [championId: string]: T }
 
-export type MatchmakingStatus = 'waiting' | 'ready' | 'pending';
+export type MatchmakingStatus = 'waiting' | 'ready' | 'pending' | 'animating';
 
 export interface MatchmakingData {
     id: string;
@@ -32,6 +32,7 @@ export interface MatchmakingRound {
     id: number;
     updatedAt: any;
     priority: string[];
+    whoSawTheAnimation: string[];
     whoHasAlreadyPlayed: string[];
     actions: MatchmakingAction[];
     players: ByPlayer<MatchMakingRoundPlayer>;
@@ -42,6 +43,7 @@ export interface MatchMakingRoundPlayer {
     hand: MatchmakingDeck;
     deck: MatchmakingDeck;
     death: MatchmakingDeck;
+    inPlay: MatchmakingDeck;
     championsState: ByChampion<MatchmakingRoundChampion>;
 }
 

@@ -8,7 +8,7 @@ import type { ActiveParts } from '../parts';
 
 import DeckManager from './deckManager';
 import EnergyManager from './energyManager';
-import type { Deck, TeamOptions } from './interface';
+import type { TeamOptions } from './interface';
 
 export default class Team {
     public id: string;
@@ -16,26 +16,20 @@ export default class Team {
 
     public champions: Champion<Species>[] = [];
 
-    private deckManager: DeckManager;
-    private energyManager: EnergyManager;
+    public deckManager: DeckManager;
+    public energyManager: EnergyManager;
 
-    constructor({ champions, deck, hand, energy, name, id }: TeamOptions) {
+    constructor({ champions, deck, hand, death, inPlay, energy, name, id }: TeamOptions) {
         this.name = name || this.name;
 
         this.id = id || uuid();
         this.champions = champions || this.champions;
 
         this.energyManager = new EnergyManager(energy ?? 3);
-        this.deckManager = new DeckManager(champions, deck, hand);
+        this.deckManager = new DeckManager(champions, { death, deck, hand, inPlay });
 
         this.init();
     }
-
-    get energies() { return this.energyManager.energies; }
-
-    get deck() { return this.deckManager.deck; }
-    get hand() { return this.deckManager.hand; }
-    set hand(hand: Deck) { this.deckManager.setHand(hand); }
 
     get alives() { return this.champions.filter((champion) => champion.isAlive); }
 
@@ -46,7 +40,7 @@ export default class Team {
     get lessSpeed() { return lessThan(this.alives, 'stats.speed'); }
 
     private init() {
-        Object.entries(this.deckManager.hand).map(([championId, cards]) => {
+        Object.entries(this.deckManager.inPlay).map(([championId, cards]) => {
             const champion = this.champions.find(champion => champion.id === championId);
 
             if (!champion) { return; }
@@ -60,7 +54,7 @@ export default class Team {
 
         if (!hasValidCost) { return; }
 
-        this.deckManager.moveCardToHand(champion, card);
+        this.deckManager.moveCardToInPlay(champion, card);
 
         champion.shield += card.shield;
 
@@ -68,7 +62,7 @@ export default class Team {
     }
 
     public resetHand(champion: Champion<Species>) {
-        const enegies = this.deckManager.discardHand(champion);
+        const enegies = this.deckManager.discardInPlay(champion);
 
         champion.shield = 0;
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { HTMLAttributes, useEffect, useState } from 'react';
 
 import type { Style } from '../interface';
 
@@ -12,8 +12,13 @@ const styledHide = (timeout: number): Style => ({
     transition: `all ${timeout}s ease-in-out`
 });
 
-interface FadeProps { enter: boolean, delay?: number; timeout?: number; children: React.ReactNode; }
-export default function Fade({ children, enter, delay = 0, timeout = .2 }: FadeProps) {
+interface FadeProps extends HTMLAttributes<HTMLElement> {
+    enter: boolean;
+    delay?: number;
+    timeout?: number;
+    children: React.ReactNode;
+}
+export default function Fade({ children, enter, delay = 0, timeout = .2, ...props }: FadeProps) {
     const [style, setStyle] = useState<Style>(styledHide(timeout));
 
     useEffect(() => {
@@ -23,7 +28,7 @@ export default function Fade({ children, enter, delay = 0, timeout = .2 }: FadeP
     }, [enter]);
 
     return (
-        <div style={style}>
+        <div {...props} style={{ ...props.style, ...style }}>
             {children}
         </div>
     );

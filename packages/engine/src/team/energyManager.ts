@@ -9,5 +9,4 @@ export default class EnergyManager {
     public spend(amount: number) { this.energies -= amount; }
 
     public recover(amount: number) { this.energies += amount; }
-
 }

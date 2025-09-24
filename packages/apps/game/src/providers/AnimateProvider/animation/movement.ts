@@ -1,7 +1,7 @@
 import { wait } from '@mystical-mingles/toolkit/promise';
 
 export async function goTo(el: HTMLElement, target: HTMLElement, isEnemy: boolean) {
-    const modificador = isEnemy ? -70 : 70;
+    const modificador = isEnemy ? 70 : -70;
 
     const elRect = el.getBoundingClientRect();
     const targetRect = target.getBoundingClientRect();

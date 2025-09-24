@@ -1,6 +1,8 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 
 import Stack from '@mystical-mingles/ui/components/Stack';
+import Fade from '@mystical-mingles/ui/animations/Fade';
+import Slide from '@mystical-mingles/ui/animations/Slide';
 
 import type Card from '@mystical-mingles/engine/card';
 import type Champion from '@mystical-mingles/engine/champion';
@@ -9,18 +11,34 @@ import type { ActiveParts } from '@mystical-mingles/engine/parts';
 
 import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
 
+import useAnimate from '@/providers/AnimateProvider/useAnimate';
+
 import Deck from '../Deck';
+import CardComponent from '../Card';
 import useGameControl from '../../useGameControl';
 
-import HandCardsByChampion from './components/HandCardsByChampion';
+import InPlayCardsByChampion from './components/InPlayCardsByChampion';
+
+import './HUD.scss';
 
 export default function HUD({ children }: PropsWithChildren) {
-    const { game, me } = useGameControl();
-
+    const { game, me, enemy } = useGameControl();
+    const { actor } = useAnimate();
     const { endTurn } = useMatchmaking();
 
     if (!me) { return; }
+    if (!enemy) { return; }
     if (!game) { return; }
+
+    const playedCards = useMemo<Card<Species, ActiveParts>[]>(() => {
+        if (!actor) { return []; }
+
+        const ref = me.team.champions.some(c => c.id === actor?.id)
+            ? me.team
+            : enemy.team;
+
+        return ref.deckManager.inPlay[actor.id];
+    }, [actor]);
 
     const handleChooseCard = (card: Card<Species, ActiveParts>, champion: Champion<Species>) => {
         me.team.playCard(card, champion);
@@ -45,7 +63,27 @@ export default function HUD({ children }: PropsWithChildren) {
     };
 
     return (
-        <Stack flexDirection="column" justifyContent="space-between" style={{ height: '100vh' }}>
+        <Stack className="HUD" flexDirection="column" justifyContent="space-between" style={{ height: '100vh' }}>
+            {
+                Boolean(actor) && (
+                    <Fade enter={Boolean(actor)} delay={150} className="HUD__hand-cards-container">
+                        <Stack
+                            alignItems="center"
+                            flexDirection="row"
+                            justifyContent="center"
+                            className="HUD__hand-cards"
+                        >
+                            {
+                                playedCards.map((card, index) => (
+                                    <Slide enter key={card.id} delay={(index + 1) * 150} direction="top">
+                                        <CardComponent key={card.id} card={card} />
+                                    </Slide>
+                                ))
+                            }
+                        </Stack>
+                    </Fade>
+                )
+            }
             <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
                 <div style={{ width: 200 }}>Round: {game.round}</div>
 
@@ -66,7 +104,7 @@ export default function HUD({ children }: PropsWithChildren) {
 
                                 <div>{index + 1}</div>
                                 <div>{champion.name}</div>
-                                <HandCardsByChampion champion={champion} onRemoveFromHand={removeFromHand} />
+                                <InPlayCardsByChampion champion={champion} onRemoveFromHand={removeFromHand} />
                             </Stack>
                         ))
                     }
@@ -81,7 +119,7 @@ export default function HUD({ children }: PropsWithChildren) {
                 </div>
                 <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
                     <div style={{ width: 200 }}>
-                        energy: {me.team.energies}/10
+                        energy: {me.team.energyManager.energies}/10
                     </div>
                     <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
                         {
@@ -93,7 +131,7 @@ export default function HUD({ children }: PropsWithChildren) {
                                         <Deck
                                             champion={champion}
                                             order={game.turnOrder.findIndex(c => c.id === champion.id) + 1}
-                                            cards={me.team.deck[champion.id]}
+                                            cards={me.team.deckManager.hand[champion.id]}
                                             onChoose={(card) => handleChooseCard(card, champion)}
                                         />
                                     </Stack>

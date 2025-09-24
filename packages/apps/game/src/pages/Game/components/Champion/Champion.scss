@@ -3,4 +3,8 @@
     padding: 30px;
 
     transition: all $animation;
+
+    &--active {
+        box-shadow: $box-shadow-regular;
+    }
 }

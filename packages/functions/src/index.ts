@@ -1,3 +1,3 @@
-import { onMatchReady } from './handlers/onMatchReady';
+import handleMatchReady from './handlers/onMatchReady';
 
-export const onMatchReadys = onMatchReady;
+export const onMatchReady = handleMatchReady;

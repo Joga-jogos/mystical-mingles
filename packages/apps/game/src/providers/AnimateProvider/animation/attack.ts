@@ -1,3 +1,5 @@
+import { wait } from '@mystical-mingles/toolkit/promise';
+
 import type { MatchmakingAction } from '@mystical-mingles/services/matchmaking';
 
 import { messageAnimation } from './message';
@@ -23,7 +25,7 @@ function takesDamageAnimation(el: HTMLElement) {
     });
 }
 
-function damageAnimation(el: HTMLElement) {
+function attackAnimation(el: HTMLElement) {
     return new Promise(resolve => {
         const elMingle = el.querySelector<HTMLDivElement>('div[data-entity="mingle"]');
 
@@ -44,13 +46,38 @@ function damageAnimation(el: HTMLElement) {
     });
 }
 
+async function throwSomething(el: HTMLElement, target: HTMLElement) {
+    const div = document.createElement('div');
+
+    div.setAttribute('class', 'bullet');
+    el.appendChild(div);
+
+    const elRect = el.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+
+    // diferença entre centro do alvo e centro do elemento
+    const dx = targetRect.left + targetRect.width / 2 - (elRect.left + elRect.width / 2);
+    const dy = targetRect.top + targetRect.height / 2 - (elRect.top + elRect.height / 2);
+
+    div.style.transform = `translate(${dx}px, ${dy}px)`;
+
+    return wait(() => { el.removeChild(div); }, 350);
+}
+
 export async function attack(
     el: HTMLElement,
     target: HTMLElement,
     action: MatchmakingAction,
     cb: () => void
 ) {
-    damageAnimation(el);
+    attackAnimation(el);
+
+    const isRanged = action.type === 'ranged';
+
+    if (isRanged) {
+        await throwSomething(el, target);
+    }
+
     takesDamageAnimation(target);
     cb();
 
@@ -61,5 +88,4 @@ export async function attack(
     if (!action.critical) {
         await messageAnimation(target, String(action.damage), 'damage');
     }
-
 }

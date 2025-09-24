@@ -33,9 +33,9 @@ export default class MatchmakingServices {
         matchmakingId: string,
         energy: number;
         hand: MatchmakingDeck;
-        deck: MatchmakingDeck;
+        inPlay: MatchmakingDeck;
     }) {
-        const { roundId, playerId, matchmakingId, hand, deck, energy } = data;
+        const { roundId, playerId, matchmakingId, hand, inPlay, energy } = data;
 
         const path = `players.${playerId}`;
 
@@ -44,7 +44,7 @@ export default class MatchmakingServices {
             pathSegments: [matchmakingId, 'rounds', `Round${roundId}`],
             data: {
                 [`${path}.hand`]: hand,
-                [`${path}.deck`]: deck,
+                [`${path}.inPlay`]: inPlay,
                 [`${path}.energy`]: energy,
                 'whoHasAlreadyPlayed': arrayUnion(playerId),
             }
