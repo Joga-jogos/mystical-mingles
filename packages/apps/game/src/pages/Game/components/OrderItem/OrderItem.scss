@@ -1,0 +1,34 @@
+.order-item {
+    width: 150px;
+    height: 70px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: var(--info);
+
+    display: flex;
+    position: relative;
+
+    box-shadow: $box-shadow-small;
+
+    &--enemy {
+        background-color: var(--error);
+        transform: scale(-0.8, 0.8);
+        margin: 0 -15px;
+    }
+
+    .order-text {
+        margin-right: 30px;
+
+        &--enemy {
+            transform: scale(-1, 1);
+        }
+    }
+
+    .mingle {
+        margin-top: 35px;
+    }
+
+    .order {
+        font-family: "zuera";
+    }
+}

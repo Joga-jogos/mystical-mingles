@@ -1,3 +1,43 @@
 .deck {
-    border: 1px solid red;
+    &-card-container {
+        position: relative;
+        margin: 0 -65px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &-card-fake {
+        opacity: 0;
+        top: 0px;
+        position: absolute;
+        transition: all 0.2s ease-in-out;
+        z-index: -1;
+        transform: scale(.8);
+    }
+
+    &-card-button {
+        border: none;
+        padding: 0;
+        background: transparent;
+        z-index: 9;
+
+        cursor: pointer;
+
+        &:hover {
+            +.deck-card-fake {
+                opacity: 1;
+                z-index: 5;
+                top: -90%;
+                transform: scale(1);
+            }
+        }
+    }
+
+    &-mingle {
+        z-index: 10;
+        position: absolute;
+        bottom: 15px;
+    }
 }

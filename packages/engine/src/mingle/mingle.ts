@@ -25,7 +25,7 @@ function pickCard<
 >(cards: Card<S, A>[], name: C) {
     const card = cards.find(card => card.name === name);
 
-    if (!card) { throw new Error('Card not found'); }
+    if (!card) { throw new Error(`Card ${name} not found`); }
 
     return card;
 }

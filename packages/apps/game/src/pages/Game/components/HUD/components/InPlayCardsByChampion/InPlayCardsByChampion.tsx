@@ -3,8 +3,6 @@ import type { Species } from '@mystical-mingles/engine/species';
 
 import useGameControl from '@/pages/Game/useGameControl';
 
-import CardComponent from '../../../Card';
-
 import './InPlayCardsByChampion.scss';
 
 interface InPlayCardsByChampionProps {
@@ -32,7 +30,7 @@ export default function InPlayCardsByChampion({ champion, onRemoveFromHand }: In
                         style={{ bottom: -(70 + (40 * index)) }}
                         onClick={handleRemoveHand}
                     >
-                        <CardComponent card={card} />
+                        {card.name}
                     </button>
                 ))
             }
@@ -45,7 +43,7 @@ export default function InPlayCardsByChampion({ champion, onRemoveFromHand }: In
                         style={{ bottom: -(70 + (40 * index)) }}
                         onClick={handleRemoveHand}
                     >
-                        <CardComponent card={card} />
+                        {card.name}
                     </button>
                 ))
             }

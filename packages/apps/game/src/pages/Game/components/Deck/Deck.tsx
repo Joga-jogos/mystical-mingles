@@ -1,11 +1,14 @@
 import Stack from '@mystical-mingles/ui/components/Stack';
 
+import type Card from '@mystical-mingles/engine/card';
 import type Champion from '@mystical-mingles/engine/champion';
 import type { Species } from '@mystical-mingles/engine/species';
 import { ActiveParts } from '@mystical-mingles/engine/parts';
-import type Card from '@mystical-mingles/engine/card';
 
-import CardComponent from '../Card';
+import CardUI from '@mystical-mingles/common/Card';
+
+import OrderItem from '../OrderItem';
+import useGameControl from '../../useGameControl';
 
 import './Deck.scss';
 
@@ -17,23 +20,46 @@ interface DeckProps {
 }
 
 export default function Deck({ order, champion, cards, onChoose }: DeckProps) {
+    const { me } = useGameControl();
+
     const handleChoose = (card: Card<Species, ActiveParts>) => { onChoose(card); };
 
+    if (!me) { return <></>; }
+
     return (
-        <Stack flexDirection="column" alignItems="center" gap={5} className="deck">
-            <label>{order}</label>
-            {champion.name}
-            <Stack>
+        <Stack
+            gap={5}
+            className="deck"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+        >
+            <Stack gap={0} alignItems="center" justifyContent="center">
                 {
                     cards
                         .sort((a, b) => a.name > b.name ? 1 : -1)
                         .map((card) => (
-                            <button key={card.id} onClick={() => handleChoose(card)}>
-                                <CardComponent card={card} />
-                            </button>
+                            <div key={card.id} className="deck-card-container">
+                                <button
+                                    className="deck-card-button"
+                                    onClick={() => handleChoose(card)}
+                                >
+                                    <CardUI card={card} size={.7} />
+                                </button>
+                                <div className="deck-card-fake">
+                                    <CardUI card={card} />
+                                </div>
+                            </div>
                         ))
                 }
             </Stack>
+            <div className="deck-mingle">
+                <OrderItem
+                    order={order}
+                    champion={champion}
+                    isEnemy={!me.team.champions.some(c => c.id === champion.id)}
+                />
+            </div>
         </Stack>
     );
 }

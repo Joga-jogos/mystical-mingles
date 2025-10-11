@@ -1,19 +1,24 @@
+import { logger } from 'firebase-functions';
+
 import Game from '@mystical-mingles/engine/game';
 
 import type { MatchmakingData, MatchmakingRound, MatchmakingAction } from '@mystical-mingles/services/matchmaking';
-import { toGame } from '@mystical-mingles/services/matchmaking';
+import { toGame, toMatchmaking } from '@mystical-mingles/services/matchmaking';
 
 import type { DB } from '../core';
+import { getAction } from '../system/getAction';
 import { getTarget } from '../system/getTarget';
-import { getDamage } from '../system/getDamage';
 
 interface GenerateActions {
     db: DB;
     round: MatchmakingRound;
+    lastRound: MatchmakingRound;
     matchmaking: MatchmakingData;
 }
 
-export function generateActions({ matchmaking, round, db }: GenerateActions) {
+export function generateActions({ matchmaking, round, lastRound, db }: GenerateActions) {
+    logger.debug('>>> lastRound', lastRound);
+
     const players = toGame.mapPlayer(matchmaking.players, round);
 
     const game = new Game({
@@ -31,42 +36,24 @@ export function generateActions({ matchmaking, round, db }: GenerateActions) {
 
         const challenger = game.players.find(team => team.id !== me.id);
 
-        const cards = round.players[me.id].hand[champion.id];
+        const cards = round.players[me.id].inPlay[champion.id];
 
-        if (!cards) { return; }
+        if (!cards.length) { return acc; }
+
+        const target = getTarget({
+            card: cards[0],
+            champion,
+            team: challenger.team,
+        });
 
         const actions = cards.map<MatchmakingAction>(cardOptions => {
-            const card = me.team.deckManager.inPlay[champion.id]
-                .find(card => card.name === cardOptions.name);
-            // const isMelee = card.type === 'melee';
-
-            const target = getTarget({
-                card,
-                champion,
-                team: challenger.team,
-            });
-
-            // INICIAR CALCULO DE DANO
-            const { critical, damage, miss, truedamage } = getDamage({
+            return getAction({
+                me,
+                challenger,
                 champion,
                 target,
-                card,
-                meTeam: me.team,
-                challangerTeam: challenger.team
+                cardOptions,
             });
-
-            if (truedamage) { target.takeTrueDamage(damage); }
-            if (!truedamage) { target.takeDamage(damage); }
-
-            return {
-                type: card.type,
-                actor: champion.options,
-                target: target.options,
-                critical,
-                damage,
-                miss,
-                truedamage,
-            };
         });
 
         acc = [...acc, ...actions];
@@ -75,7 +62,11 @@ export function generateActions({ matchmaking, round, db }: GenerateActions) {
     }, []).filter(Boolean);
 
     return db.update<MatchmakingRound>({
-        data: { actions: roundActions },
+        data: {
+            actions: roundActions,
+            players: toMatchmaking.mapPlayerRound(game.players),
+            status: 'animating',
+        },
         segments: [
             { collection: 'matchmaking', doc: matchmaking.id },
             { collection: 'rounds', doc: `Round${round.id}` },

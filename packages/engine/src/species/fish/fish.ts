@@ -2,11 +2,11 @@ import type { Species, SpeciesOptions, SpeciesGenes, SpeciesCards, SpeciesStats,
 
 import { HORN_CARDS, MOUTH_CARDS, TAIL_CARDS, BACK_CARDS } from './cards';
 
-const EYES = ['Fish Crazy'] as const;
-const BACK = ['Fish Fin'] as const;
-const HORNS = ['Fish Shark'] as const;
-const TAILS = ['Fish Gold'] as const;
-const MOUTHS = ['Fish Eat'] as const;
+const EYES = ['fish eye 1', 'fish eye 2'] as const;
+const BACK = ['fish back 1', 'fish back 2'] as const;
+const HORNS = ['fish horn 1', 'fish horn 2'] as const;
+const TAILS = ['fish tails 1', 'fish tails 2'] as const;
+const MOUTHS = ['fish mounths 1', 'fish mounths 2'] as const;
 
 const COLORS = ['#00b8ff', '#00dff3', '#00f1d2', '#4d545e', '#f4fff4'] as const;
 

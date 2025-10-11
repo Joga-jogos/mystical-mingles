@@ -25,6 +25,7 @@ export default class Champion<S extends Species> implements ChampionOptions {
     public readonly coordinates: Coordinates;
 
     public life: number;
+    public lastLife: number;
     public shield: number;
 
     public stats: Stats;
@@ -32,9 +33,8 @@ export default class Champion<S extends Species> implements ChampionOptions {
     public buffs: SetOfEffects<Buff>;
     public debuffs: SetOfEffects<Debuff>;
 
-    constructor({ mingle, shield, buffs, debuffs, life, coordinates }: ChampionBaseOptions<S>) {
+    constructor({ mingle, shield, buffs, debuffs, life, lastLife, coordinates }: ChampionBaseOptions<S>) {
         this.shield = shield || 0;
-        this.life = life || 0;
         this.coordinates = coordinates;
 
         this.id = mingle.id;
@@ -49,13 +49,18 @@ export default class Champion<S extends Species> implements ChampionOptions {
 
         this.buffs = buffs || {};
         this.debuffs = debuffs || {};
-        this.life = Math.ceil(mingle.stats.life * modificators[mingle.species]);
+
+        this.life = life ?? Math.ceil(mingle.stats.life * modificators[mingle.species]);
+        this.lastLife = lastLife ?? life;
     }
 
     get options(): ChampionOptionsWithMingleOptions<S> {
         return {
             coordinates: this.coordinates,
             life: this.life,
+            buffs: this.buffs,
+            debuffs: this.debuffs,
+            shield: this.shield,
             mingle: {
                 id: this.id,
                 name: this.name,

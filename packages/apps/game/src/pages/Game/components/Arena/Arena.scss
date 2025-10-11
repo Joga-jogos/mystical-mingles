@@ -1,6 +1,8 @@
 .arena-container {
     @include grid(0, 11);
 
+    margin-top: 125px;
+
     .arena-slot {
         height: 50px;
         display: flex;

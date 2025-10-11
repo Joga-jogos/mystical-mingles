@@ -1,12 +1,12 @@
 import type Card from '../card';
 import type { GeneParts, ActiveParts, Stats } from '../parts';
 
-import type { Bird, BirdGenes, BirdColors } from './bird';
 import type { Fish, FishGenes, FishColors } from './fish';
+import type { Reptile, ReptileGenes, ReptileColors } from './reptile';
 
 export type Category = 'dps' | 'speed' | 'tank';
 
-export type Species = 'fish' | 'bird';
+export type Species = 'fish' | 'reptile';
 
 export type SpeciesGenesParts = { [Key in GeneParts]: string; };
 
@@ -25,7 +25,7 @@ export interface SpeciesOptions<S extends Species, SGP extends SpeciesGenesParts
 }
 
 export type SpeciesDetailsMap = {
-    bird: Bird<BirdGenes, BirdColors, 'bird'>;
+    reptile: Reptile<ReptileGenes, ReptileColors, 'reptile'>;
     fish: Fish<FishGenes, FishColors, 'fish'>;
 };
 

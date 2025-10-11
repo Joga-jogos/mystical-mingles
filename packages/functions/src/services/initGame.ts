@@ -1,5 +1,4 @@
 import { Timestamp } from 'firebase-admin/firestore';
-import { logger } from 'firebase-functions';
 
 import Game from '@mystical-mingles/engine/game';
 
@@ -33,17 +32,16 @@ export async function initGame({ id, matchmaking, db }: InitGame) {
     game.players[0].team.deckManager.buyCards(6);
     game.players[1].team.deckManager.buyCards(6);
 
-    logger.debug('>>> cartas escolhidas', game.players[1].team.deckManager.hand);
-
     await db.setItem<MatchmakingRound>({
         data: {
             id: 1,
+            status: 'playing',
             actions: [],
             whoSawTheAnimation: [],
             whoHasAlreadyPlayed: [],
             priority: game.priority,
             updatedAt: Timestamp.fromDate(new Date()),
-            players: toMatchmaking.mapPlayerRound(game.players)
+            players: toMatchmaking.mapPlayerRound(game.players),
         },
         segments: [
             { collection: 'matchmaking', doc: id },
@@ -51,7 +49,7 @@ export async function initGame({ id, matchmaking, db }: InitGame) {
         ],
     });
 
-    await db.update<MatchmakingData>({
+    return await db.update<MatchmakingData>({
         segments: [{ collection: 'matchmaking', doc: id },],
         data: { status: 'ready' }
     });

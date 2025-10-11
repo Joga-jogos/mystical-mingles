@@ -1,4 +1,4 @@
-import BirdIcon from '@mystical-mingles/ui/custom-icons/Bird';
+import ReptileIcon from '@mystical-mingles/ui/custom-icons/Reptile';
 import FishIcon from '@mystical-mingles/ui/custom-icons/Fish';
 import type { CustomIconProps } from '@mystical-mingles/ui/custom-icons';
 
@@ -7,7 +7,7 @@ import { colors } from '@mystical-mingles/engine/species';
 
 export function useSpecies(species: Species) {
     const icons: { [s in Species]: React.FC<CustomIconProps> } = {
-        bird: BirdIcon,
+        reptile: ReptileIcon,
         fish: FishIcon,
     };
 

@@ -22,7 +22,8 @@ export interface MatchmakingContextConfig {
     createMatchmaking?: (me: Player) => Promise<void>;
     joinMatchmaking?: (roomId: string, me: Player) => Promise<void>;
 
-    endTurn?: (me: Player) => Promise<void>;
+    endTurn?: (me: Player, roundId: number) => Promise<void>;
+    endAnimation?: (me: Player, round: MatchmakingRound) => Promise<void>;
 
     subscriptionMatchmaking?: (roomId: string, callback: (m: MatchmakingData) => void) => Unsubscribe;
     subscriptionRounds?: (roomId: string, callback: (m: MatchmakingRound) => void) => Unsubscribe;
@@ -55,10 +56,11 @@ export function MatchmakingProvider({
         createMatchmaking: (me) => createMatchmaking(me),
         joinMatchmaking: (roomId, me) => joinMatchmaking(roomId, me),
 
-        endTurn: (me) => endTurn(me),
+        endTurn: (me, roundId) => endTurn(me, roundId),
+        endAnimation: (me, round) => endAnimation(me, round),
 
-        subscriptionMatchmaking: (roomId, cb) => subscriptionMatchmaking(roomId, cb),
         subscriptionRounds: (roomId, cb) => subscriptionRounds(roomId, cb),
+        subscriptionMatchmaking: (roomId, cb) => subscriptionMatchmaking(roomId, cb),
     }), [id, matchmaking, gameOptions]);
 
     const getMatchMaking = async () => {
@@ -68,18 +70,22 @@ export function MatchmakingProvider({
 
         if (!matchmaking) { throw new Error('Jogo não encontrado'); }
 
+        setMatchmaking(matchmaking);
+
         const rounds = await matchmakingServices.getRounds(id);
 
         if (!rounds.length) { throw new Error('Rounds não encontrados'); }
 
         const lastRound = rounds.reverse()[0];
 
+        const players = toGame.mapPlayer(matchmaking.players, lastRound);
+
         setGameOptions({
             id,
-            round: 1,
+            round: lastRound.id,
             priority: lastRound.priority,
             createdAt: matchmaking.createdAt.toDate(),
-            players: toGame.mapPlayer(matchmaking.players, lastRound),
+            players,
         });
     };
 
@@ -91,6 +97,15 @@ export function MatchmakingProvider({
                 [player.id]: toMatchmaking.mapTeam(player.team)
             }
         }).then(res => setMatchmaking(res));
+    };
+
+    const endAnimation = async (player: Player, round: MatchmakingRound) => {
+        console.log('TERMINOU A ANINMAÇÃO');
+        return matchmakingServices.finishAnimation({
+            roundId: round.id,
+            playerId: player.id,
+            matchmakingId: id || '',
+        });
     };
 
     const joinMatchmaking = async (roomId: string, player: Player) => {
@@ -107,20 +122,23 @@ export function MatchmakingProvider({
         }).then(() => setMatchmaking(matchmaking));
     };
 
-    const endTurn = async (me: Player) => {
+    const endTurn = async (me: Player, roundId: number) => {
         if (!id) { return; }
-        if (!gameOptions) { return; }
+
+        console.log(`JOGADOR ${me.id} jogou as cartas`);
 
         const inPlay = toMatchmaking.mapDeck(me.team.deckManager.inPlay);
         const hand = toMatchmaking.mapDeck(me.team.deckManager.hand);
+        const deck = toMatchmaking.mapDeck(me.team.deckManager.deck);
 
         return matchmakingServices.endTurn({
+            roundId: roundId,
             matchmakingId: id,
             playerId: me.id,
-            roundId: gameOptions.round,
             energy: me.team.energyManager.energies,
             hand,
             inPlay,
+            deck,
         });
     };
 

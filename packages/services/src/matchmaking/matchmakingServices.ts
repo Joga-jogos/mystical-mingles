@@ -27,6 +27,22 @@ export default class MatchmakingServices {
         });
     }
 
+    async finishAnimation(data: {
+        roundId: number,
+        playerId: string,
+        matchmakingId: string,
+    }) {
+        const { roundId, playerId, matchmakingId, } = data;
+
+        return this.db.update({
+            path: MatchmakingServices.PATH,
+            pathSegments: [matchmakingId, 'rounds', `Round${roundId}`],
+            data: {
+                whoSawTheAnimation: arrayUnion(playerId),
+            }
+        });
+    }
+
     async endTurn(data: {
         roundId: number,
         playerId: string,
@@ -34,8 +50,9 @@ export default class MatchmakingServices {
         energy: number;
         hand: MatchmakingDeck;
         inPlay: MatchmakingDeck;
+        deck: MatchmakingDeck;
     }) {
-        const { roundId, playerId, matchmakingId, hand, inPlay, energy } = data;
+        const { roundId, playerId, matchmakingId, hand, inPlay, deck, energy } = data;
 
         const path = `players.${playerId}`;
 
@@ -44,16 +61,11 @@ export default class MatchmakingServices {
             pathSegments: [matchmakingId, 'rounds', `Round${roundId}`],
             data: {
                 [`${path}.hand`]: hand,
+                [`${path}.deck`]: deck,
                 [`${path}.inPlay`]: inPlay,
                 [`${path}.energy`]: energy,
-                'whoHasAlreadyPlayed': arrayUnion(playerId),
+                whoHasAlreadyPlayed: arrayUnion(playerId),
             }
-        });
-
-        return this.db.update({
-            path: MatchmakingServices.PATH,
-            pathSegments: [matchmakingId],
-            data: { status: 'pending', hash: uuid() }
         });
     }
 

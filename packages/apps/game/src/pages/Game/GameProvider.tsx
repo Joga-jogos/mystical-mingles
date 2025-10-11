@@ -2,10 +2,8 @@ import { createContext, useEffect, useMemo, useState, type PropsWithChildren } f
 
 import type Game from '@mystical-mingles/engine/game';
 import type Player from '@mystical-mingles/engine/player';
-import type { Deck } from '@mystical-mingles/engine/team';
-import Card from '@mystical-mingles/engine/card';
 
-import type { MatchmakingRound } from '@mystical-mingles/services/matchmaking';
+import { toGame, type MatchmakingRound } from '@mystical-mingles/services/matchmaking';
 
 import { useAuth } from '@mystical-mingles/common/Auth';
 import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
@@ -15,8 +13,11 @@ import AnimateProvider from '@/providers/AnimateProvider';
 type GameContextConfig = {
     game?: Game;
     round?: MatchmakingRound;
+
     me?: Player;
     enemy?: Player;
+
+    hasAlreadyPlayed?: boolean;
 };
 
 export const GameContext = createContext<GameContextConfig>({});
@@ -24,7 +25,7 @@ export const GameContext = createContext<GameContextConfig>({});
 export default function GameProvider({ game, children }: PropsWithChildren<{ game: Game }>) {
     const { user } = useAuth();
 
-    const { gameOptions, subscriptionRounds, leaveRoom } = useMatchmaking();
+    const { gameOptions, matchmaking, subscriptionRounds, leaveRound } = useMatchmaking();
 
     const [round, setRound] = useState<MatchmakingRound>();
 
@@ -38,37 +39,61 @@ export default function GameProvider({ game, children }: PropsWithChildren<{ gam
         round,
         me: game.players[meIndex],
         enemy: game.players[enemyIndex],
+        hasAlreadyPlayed: round?.whoHasAlreadyPlayed.some(id => id === user?.id)
     }), [game, round]);
 
     useEffect(() => {
-        if (!leaveRoom) { return; }
+        if (!leaveRound) { return; }
         if (!subscriptionRounds) { return; }
         if (!gameOptions) { return; }
 
         subscriptionRounds(gameOptions.id, (round) => {
             if (!context.enemy) { return; }
             if (!context.me) { return; }
+            if (!user) { return; }
+            console.log('>>>>>>>>> STATUS:', round.id, round.status);
 
-            if (round.whoHasAlreadyPlayed.length !== 2) { return; }
+            const nobodyPlayedCards = round.whoHasAlreadyPlayed.length === 0;
+            const nobodySawAnimation = round.whoSawTheAnimation.length === 0;
 
-            const enemyInPlay: Deck = Object.entries(round.players[context.enemy.id].hand)
-                .reduce<Deck>((acc, [id, cards]) => {
-                    acc[id] = cards.map(card => new Card(card));
-
-                    return acc;
-                }, {});
-
-            context.enemy.team.deckManager.setInPlay(enemyInPlay);
-
-            game.update({
-                players: [context.me, context.enemy],
-            });
+            const everyoneHasAlreadyPlayed = round.whoHasAlreadyPlayed.length === 2;
+            const everyoneHasAlreadySawAnimation = round.whoSawTheAnimation.length === 2;
 
             setRound(round);
+
+            if (everyoneHasAlreadyPlayed && everyoneHasAlreadySawAnimation) {
+                console.log('ESTÃO JOGANDO');
+                return;
+            }
+
+            if (everyoneHasAlreadyPlayed && !everyoneHasAlreadySawAnimation) {
+                console.log('ATAUALIZA AS CARTAS PARA VER A ANIMAÇÃO');
+                updateGame(round, { shouldUpdateLife: false });
+                return;
+            }
+
+            if (nobodyPlayedCards && nobodySawAnimation) {
+                console.log('COMEÇANDO UM NOVO ROUND');
+                updateGame(round);
+                return;
+            }
         });
 
-        return () => { leaveRoom(); };
+        return () => { leaveRound(); };
     }, []);
+
+    const updateGame = (round: MatchmakingRound, options?: toGame.MapPlayersOptions) => {
+        if (!context.enemy) { return; }
+        if (!context.me) { return; }
+        if (!matchmaking) { return; }
+
+        const players = toGame.mapPlayer(matchmaking.players, round, options);
+
+        game.update({
+            round: round.id,
+            players
+        });
+    };
 
     return (
         <GameContext.Provider value={context}>

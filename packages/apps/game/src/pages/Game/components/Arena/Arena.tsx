@@ -25,13 +25,17 @@ export default function Arena() {
                             {
                                 me.team.champions.map(c => {
                                     const exist = c.coordinates.x === x && c.coordinates.y === Math.abs(y - 2);
-                                    return exist && <Champion key={c.id} champion={c} />;
+                                    return exist && (
+                                        <Champion key={c.id} champion={c} />
+                                    );
                                 })
                             }
                             {
                                 enemy.team.champions.map(c => {
                                     const exist = (10 - c.coordinates.x) === x && c.coordinates.y === Math.abs(y - 2);
-                                    return exist && <Champion key={c.id} direction="right" champion={c} />;
+                                    return exist && (
+                                        <Champion key={c.id} direction="right" champion={c} />
+                                    );
                                 })
                             }
                         </div>

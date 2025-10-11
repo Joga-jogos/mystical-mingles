@@ -1,3 +1,5 @@
-import handleMatchReady from './handlers/onMatchReady';
+import handleLobby from './handlers/onLobby';
+import handlePlay from './handlers/onPlay';
 
-export const onMatchReady = handleMatchReady;
+export const onLobby = handleLobby;
+export const onPlay = handlePlay;

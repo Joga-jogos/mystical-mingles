@@ -14,46 +14,60 @@ import { DB } from '../core';
 interface SetNextRound {
     db: DB,
     round: MatchmakingRound;
+    lastRound: MatchmakingRound;
     matchmaking: MatchmakingData;
 }
 
-export async function setNextRound({ matchmaking, round, db }: SetNextRound) {
-    const players = toGame.mapPlayer(matchmaking.players);
+export async function setNextRound({ matchmaking, lastRound, round, db }: SetNextRound) {
+    const players = toGame.mapPlayer(matchmaking.players, round);
 
     const game = new Game({
         id: '',
-        round: 1,
+        round: round.id,
         createdAt: new Date(),
         priority: [],
         players
     });
 
     game.setPriority();
+
+    // ATUALIZA O NOVO ROUND
     game.players.forEach(player => {
         player.team.deckManager.buyCards(3);
+        player.team.deckManager.resetInPlay();
         player.team.energyManager.recover(2);
+
+        player.team.champions.forEach(champion => {
+            const ref = round.players[player.id].championsState[champion.id];
+            const lastRoundRef = lastRound.players[player.id].championsState[champion.id];
+
+            champion.lastLife = lastRoundRef.life;
+            champion.life = ref.life;
+            champion.buffs = ref.buffs;
+            champion.debuffs = ref.debuffs;
+        });
+
+        player.team.champions.forEach(c => {
+            c.shield = 0;
+        });
     });
 
-    await db.setItem<MatchmakingRound>({
+    const newRound = round.id + 1;
+
+    return await db.setItem<MatchmakingRound>({
         data: {
-            id: round.id + 1,
-            updatedAt: Timestamp.fromDate(new Date()),
+            id: newRound,
+            status: 'playing',
+            priority: game.priority,
             actions: [],
             whoSawTheAnimation: [],
             whoHasAlreadyPlayed: [],
-            priority: game.priority,
+            updatedAt: Timestamp.fromDate(new Date()),
             players: toMatchmaking.mapPlayerRound(players)
         },
         segments: [
             { collection: 'matchmaking', doc: matchmaking.id },
-            { collection: 'rounds', doc: 'Round1' },
+            { collection: 'rounds', doc: `Round${newRound}` },
         ],
-    });
-
-    await db.update<MatchmakingData>({
-        data: { status: 'ready' },
-        segments: [
-            { collection: 'matchmaking', doc: matchmaking.id }
-        ]
     });
 };

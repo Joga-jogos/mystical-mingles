@@ -1,6 +1,7 @@
+import Zoom from '@mystical-mingles/ui/animations/Zoom';
 import Stack from '@mystical-mingles/ui/components/Stack';
-import Typography from '@mystical-mingles/ui/components/Typography';
 import Shield from '@mystical-mingles/ui/custom-icons/Shield';
+import Typography from '@mystical-mingles/ui/components/Typography';
 
 import type Champion from '@mystical-mingles/engine/champion';
 import type { Species } from '@mystical-mingles/engine/species';
@@ -19,16 +20,12 @@ export default function ChampionHUD({ champion }: ChampionHUDProps) {
     return (
         <div className="hud">
             <Stack gap={4} flexDirection="row" alignItems="center">
-                {
-                    champion.shield && (
-                        <div className="hud__shield">
-                            <Shield className="hud__shield__icon" size={30} color="info.main" />
-                            <Typography className="hud__shield__value">
-                                {champion.shield}
-                            </Typography>
-                        </div>
-                    )
-                }
+                <Zoom enter={Boolean(champion.shield)} delay={0} className="hud__shield">
+                    <Shield className="hud__shield__icon" size={30} color="info.main" />
+                    <Typography className="hud__shield__value">
+                        {champion.shield}
+                    </Typography>
+                </Zoom>
                 <Stack gap={6} alignItems="center" className="hud__life">
                     <div className="hud__life__species" style={{ backgroundColor: color }}>
                         <Icon color="background.default" />

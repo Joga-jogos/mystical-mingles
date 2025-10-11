@@ -14,7 +14,7 @@ export default class DeckManager {
     private _death: Deck;
     private _inPlay: Deck;
 
-    constructor(champions: Champion<Species>[], data: { death: Deck; deck: Deck, hand: Deck, inPlay: Deck }) {
+    constructor(private champions: Champion<Species>[], data: { death: Deck; deck: Deck, hand: Deck, inPlay: Deck }) {
         const { deck, hand, death, inPlay } = data;
 
         this.deck = deck || this.initDeck(champions);
@@ -34,6 +34,14 @@ export default class DeckManager {
 
     get inPlay() { return this._inPlay; }
     private set inPlay(inPlay: Deck) { this._inPlay = inPlay; }
+
+    get totalDeckDeath() {
+        return this.champions.reduce((acc, champion) => {
+            acc = acc + this.death[champion.id].length;
+
+            return acc;
+        }, 0);
+    }
 
     private initHand(champions: Champion<Species>[]): Deck {
         return {
@@ -89,6 +97,8 @@ export default class DeckManager {
     public setDeck(deck: Deck) { this.deck = deck; }
     public setDeath(death: Deck) { this.death = death; }
     public setInPlay(inPlay: Deck) { this.inPlay = inPlay; }
+
+    public resetInPlay() { this.inPlay = this.initHand(this.champions); }
 
     public moveCardToInPlay(champion: Champion<Species>, card: Card<Species, ActiveParts>) {
         this.inPlay[champion.id].push(card);

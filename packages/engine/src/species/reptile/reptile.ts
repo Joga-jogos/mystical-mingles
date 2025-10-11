@@ -2,15 +2,15 @@ import type { Species, SpeciesOptions, SpeciesGenes, SpeciesCards, SpeciesStats,
 
 import { HORN_CARDS, MOUTH_CARDS, TAIL_CARDS, BACK_CARDS } from './cards';
 
-const EYES = ['Bird Glass'] as const;
-const BACK = ['Bird Wing'] as const;
-const HORNS = ['Bird Topknot'] as const;
-const TAILS = ['Bird Feather'] as const;
-const MOUTHS = ['Bird Beak'] as const;
+const EYES = ['reptile eye 1', 'reptile eye 2'] as const;
+const BACK = ['reptile back 1', 'reptile back 2'] as const;
+const HORNS = ['reptile horn 1', 'reptile horn 2'] as const;
+const TAILS = ['reptile tails 1', 'reptile tails 2'] as const;
+const MOUTHS = ['reptile mounths 1', 'reptile mounths 2'] as const;
 
-const COLORS = ['#ff78b4', '#ffafc1', '#ff99b0', '#583c44', '#fff7ff'] as const;
+const COLORS = ['#9967fb', '#c569cf', '#f8bbff', '#5e436d', '#fff7ff'] as const;
 
-export interface BirdGenes {
+export interface ReptileGenes {
     eye: typeof EYES[number];
     horn: typeof HORNS[number];
     tail: typeof TAILS[number];
@@ -18,12 +18,12 @@ export interface BirdGenes {
     mouth: typeof MOUTHS[number];
 }
 
-export type BirdColors = typeof COLORS;
+export type ReptileColors = typeof COLORS;
 
-export class Bird<
-    G extends BirdGenes,
-    Colors extends BirdColors,
-    S extends Species = 'bird'
+export class Reptile<
+    G extends ReptileGenes,
+    Colors extends ReptileColors,
+    S extends Species = 'reptile'
 > implements SpeciesOptions<S, G, Colors> {
     public readonly colors: Colors;
     public readonly category: Category;
@@ -42,7 +42,7 @@ export class Bird<
     }
 }
 
-export default new Bird({
+export default new Reptile({
     genes: {
         eye: EYES,
         horn: HORNS,

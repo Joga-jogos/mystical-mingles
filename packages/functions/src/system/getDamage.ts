@@ -9,7 +9,6 @@ import { buffsMultiplicators } from '@mystical-mingles/engine/effect';
 import { categories, interaction } from '@mystical-mingles/engine/species';
 
 interface GetDamage {
-    meTeam: Team;
     challangerTeam: Team;
     champion: Champion<Species>;
     target: Champion<Species>;

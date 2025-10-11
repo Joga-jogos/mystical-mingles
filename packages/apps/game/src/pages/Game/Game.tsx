@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import type { GameOptions } from '@mystical-mingles/engine/game';
 
 import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
-import { useAuth } from '@mystical-mingles/common/Auth';
 
 import useGame from './useGame';
 import HUD from './components/HUD';
@@ -15,8 +14,6 @@ interface GameBaseProps {
 }
 
 export function GameBase({ gameOptions }: GameBaseProps) {
-    const { user } = useAuth();
-
     const game = useGame({
         id: gameOptions.id,
         round: gameOptions.round,
@@ -27,7 +24,6 @@ export function GameBase({ gameOptions }: GameBaseProps) {
 
     return (
         <GameProvider game={game}>
-            user: {user?.email}
             <HUD>
                 <Arena />
             </HUD>

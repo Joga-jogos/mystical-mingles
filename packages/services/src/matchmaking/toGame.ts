@@ -9,6 +9,11 @@ import type { ChampionOptionsWithMingleOptions } from '@mystical-mingles/engine/
 
 import type { ByPlayer, MatchmakingDeck, MatchmakingPlayerData, MatchmakingRound } from './interface';
 
+export type MapPlayersOptions = {
+    shouldUpdateLife?: boolean;
+    shouldUpdateDeck?: boolean;
+}
+
 function mapDeck(champions: ChampionOptionsWithMingleOptions<Species>[], deck: MatchmakingDeck) {
     const initDeck: { [X: string]: Card<Species, ActiveParts>[] } = {
         [champions[0].mingle.id || '']: [],
@@ -31,6 +36,10 @@ export function mapChampions(champions: ChampionOptionsWithMingleOptions<Species
 
         return new Champion({
             coordinates,
+            life: options.life,
+            shield: options.shield,
+            buffs: options.buffs,
+            debuffs: options.debuffs,
             mingle: new Mingle({
                 id: options.mingle.id,
                 name: options.mingle.name,
@@ -43,7 +52,19 @@ export function mapChampions(champions: ChampionOptionsWithMingleOptions<Species
     });
 }
 
-export function mapPlayer(players: ByPlayer<MatchmakingPlayerData>, round?: MatchmakingRound) {
+export function mapPlayer(
+    players: ByPlayer<MatchmakingPlayerData>,
+    round?: MatchmakingRound,
+    options?: MapPlayersOptions,
+) {
+    const _options: MapPlayersOptions = {
+        shouldUpdateDeck: true,
+        shouldUpdateLife: true,
+        ...options
+    };
+
+    const shouldUpdateDeck = _options.shouldUpdateDeck && round;
+
     return Object.entries(players)
         .map(([key, player]) => {
             return new Player({
@@ -52,10 +73,27 @@ export function mapPlayer(players: ByPlayer<MatchmakingPlayerData>, round?: Matc
                     name: player.team.name,
                     energy: round ? round.players[key].energy : 3,
                     deck: mapDeck(player.team.champions, player.deck),
-                    death: mapDeck(player.team.champions, round ? round.players[key].death : {}),
-                    inPlay: mapDeck(player.team.champions, round ? round.players[key].inPlay : {}),
-                    hand: mapDeck(player.team.champions, round ? round.players[key].hand : {}),
-                    champions: mapChampions(player.team.champions),
+                    death: mapDeck(player.team.champions, shouldUpdateDeck ? round.players[key].death : {}),
+                    inPlay: mapDeck(player.team.champions, shouldUpdateDeck ? round.players[key].inPlay : {}),
+                    hand: mapDeck(player.team.champions, shouldUpdateDeck ? round.players[key].hand : {}),
+                    champions: mapChampions(
+                        player.team.champions.map(champion => {
+                            const championState = round && round.players[key].championsState[champion.mingle.id];
+
+                            const shouldUpdateLife = _options && _options.shouldUpdateLife && championState;
+
+                            const life = shouldUpdateLife
+                                ? championState.life
+                                : (championState?.lastLife ?? champion.life);
+
+                            return {
+                                ...champion,
+                                life,
+                                buffs: shouldUpdateLife ? championState.buffs : champion.buffs,
+                                debuffs: shouldUpdateLife ? championState.debuffs : champion.debuffs,
+                            };
+                        })
+                    ),
                 })
             });
         });

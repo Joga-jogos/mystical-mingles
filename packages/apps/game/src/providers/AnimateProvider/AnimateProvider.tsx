@@ -1,9 +1,13 @@
 import { createContext, type PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
+import { wait } from '@mystical-mingles/toolkit/promise';
+
 import type Champion from '@mystical-mingles/engine/champion';
 import type { Species } from '@mystical-mingles/engine/species';
 
 import type { MatchmakingAction, MatchmakingRound } from '@mystical-mingles/services/matchmaking';
+
+import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
 
 import useGameControl from '@/pages/Game/useGameControl';
 
@@ -11,7 +15,6 @@ import { attack } from './animation/attack';
 import { goTo, goBack } from './animation/movement';
 
 import './Animate.scss';
-import { wait } from '@mystical-mingles/toolkit/promise';
 
 interface AnimateContextConfig {
     actor?: Champion<Species>;
@@ -27,8 +30,10 @@ export const AnimateContext = createContext<AnimateContextConfig>({
 
 export default function Animate({ children }: PropsWithChildren) {
     const { game, round, me, enemy } = useGameControl();
+    const { endAnimation } = useMatchmaking();
 
     const [actor, setActor] = useState<Champion<Species>>();
+    const [sawTheAnimation, setSawTheAnimation] = useState(false);
 
     const context = useMemo<AnimateContextConfig>(() => ({
         actor,
@@ -38,14 +43,36 @@ export default function Animate({ children }: PropsWithChildren) {
 
     useEffect(() => {
         if (!round) { return; }
+        if (!me) { return; }
+        if (!endAnimation) { return; }
 
-        animate(round);
-    }, [round]);
+        const nobodyPlayedCards = round.whoHasAlreadyPlayed.length === 0;
+        const nobodySawAnimation = round.whoSawTheAnimation.length === 0;
+        const isPlaying = round.status === 'playing';
+
+        if (nobodyPlayedCards && nobodySawAnimation && isPlaying) { setSawTheAnimation(false); }
+
+        const shouldNotSeeTheAnimation =
+            round.status !== 'animating'
+            || round.whoSawTheAnimation.includes(me.id)
+            || sawTheAnimation;
+
+        console.log('>>> shouldNotSeeTheAnimation', shouldNotSeeTheAnimation);
+
+        if (shouldNotSeeTheAnimation) { return; }
+
+        setSawTheAnimation(true);
+
+        animate(round).then(async () => {
+            await endAnimation(me, round);
+        });
+    }, [round, sawTheAnimation]);
 
     const animate = async (round: MatchmakingRound) => {
         if (!game) { return; }
         if (!me) { return; }
         if (!enemy) { return; }
+        if (!endAnimation) { return; }
 
         const championActions = game.turnOrder.reduce<{ [x: string]: MatchmakingAction[] }>((acc, champion) => {
             const championActions = round.actions.filter(action => action.actor.mingle.id === champion.id);
@@ -57,8 +84,6 @@ export default function Animate({ children }: PropsWithChildren) {
 
         try {
             for (const [id, actions] of Object.entries(championActions)) {
-                console.log('>>> id', id);
-
                 if (!actions.length) { continue; }
 
                 const itsMine = me.team.champions.some(c => c.id === id);
@@ -69,7 +94,7 @@ export default function Animate({ children }: PropsWithChildren) {
                 await wait(() => { }, 500);
 
                 for (const [index, action] of Array.from(actions).entries()) {
-                    const { target, type, damage, miss, critical, truedamage } = action;
+                    const { target, type, damage, miss, truedamage } = action;
 
                     if (!target.mingle.id) { continue; };
 

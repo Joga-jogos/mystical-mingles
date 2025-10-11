@@ -2,9 +2,27 @@
     position: relative;
     padding: 30px;
 
+    z-index: 1;
+
     transition: all $animation;
+
+    // animation: breath 1.5s ease-in-out infinite;
 
     &--active {
         box-shadow: $box-shadow-regular;
+    }
+}
+
+@keyframes breath {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.03);
+        opacity: 0.95;
     }
 }

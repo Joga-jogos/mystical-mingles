@@ -11,6 +11,7 @@ export type SetOfEffects<E extends BuffAndDebuff = BuffAndDebuff> = Partial<{ [k
 export interface ChampionOptions extends MingleOptions<Species> {
     id?: string;
     life?: number;
+    lastLife?: number;
     shield?: number;
     buffs?: SetOfEffects<Buff>;
     debuffs?: SetOfEffects<Debuff>;
@@ -20,6 +21,7 @@ export interface ChampionOptions extends MingleOptions<Species> {
 export interface ChampionBaseOptions<S extends Species> extends Pick<
     ChampionOptions,
     | 'life'
+    | 'lastLife'
     | 'buffs'
     | 'shield'
     | 'debuffs'

@@ -13,7 +13,8 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src')
-        }
+        },
+        dedupe: ['@mystical-mingles/ui'],
     },
     server: {
         host: true,
@@ -23,9 +24,7 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 additionalData: `
-                    @use "@mystical-mingles/ui/styles/mixin.scss" as *;
-                    @use "@mystical-mingles/ui/styles/reset.scss" as *;
-                    @use "@mystical-mingles/ui/styles/variables.scss" as *;
+                    @use "@mystical-mingles/ui/styles/main.scss" as *;
                 `
             },
         },

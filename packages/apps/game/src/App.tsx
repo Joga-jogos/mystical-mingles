@@ -5,8 +5,8 @@ import { ThemeProvider, createTheme } from '@mystical-mingles/ui/theme';
 
 import type { PlayerData } from '@mystical-mingles/services/player';
 
-import { AuthProvider, useAuth } from '@mystical-mingles/common/Auth';
 import { PlayerProvider } from '@mystical-mingles/common/Player';
+import { AuthProvider, useAuth } from '@mystical-mingles/common/Auth';
 
 import {
     url,

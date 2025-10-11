@@ -20,7 +20,7 @@
     "./assets/*": "./assets/*"
   },
   "scripts": {
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },

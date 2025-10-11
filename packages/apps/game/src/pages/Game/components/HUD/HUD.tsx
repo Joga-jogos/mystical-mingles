@@ -1,8 +1,11 @@
 import { PropsWithChildren, useMemo } from 'react';
 
-import Stack from '@mystical-mingles/ui/components/Stack';
 import Fade from '@mystical-mingles/ui/animations/Fade';
 import Slide from '@mystical-mingles/ui/animations/Slide';
+import BoltIcon from '@mystical-mingles/ui/custom-icons/Bolt';
+import Stack from '@mystical-mingles/ui/components/Stack';
+import Button from '@mystical-mingles/ui/components/Button';
+import Typography from '@mystical-mingles/ui/components/Typography';
 
 import type Card from '@mystical-mingles/engine/card';
 import type Champion from '@mystical-mingles/engine/champion';
@@ -14,7 +17,7 @@ import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
 import useAnimate from '@/providers/AnimateProvider/useAnimate';
 
 import Deck from '../Deck';
-import CardComponent from '../Card';
+import OrderItem from '../OrderItem';
 import useGameControl from '../../useGameControl';
 
 import InPlayCardsByChampion from './components/InPlayCardsByChampion';
@@ -22,16 +25,14 @@ import InPlayCardsByChampion from './components/InPlayCardsByChampion';
 import './HUD.scss';
 
 export default function HUD({ children }: PropsWithChildren) {
-    const { game, me, enemy } = useGameControl();
     const { actor } = useAnimate();
     const { endTurn } = useMatchmaking();
-
-    if (!me) { return; }
-    if (!enemy) { return; }
-    if (!game) { return; }
+    const { game, me, enemy, round, hasAlreadyPlayed } = useGameControl();
 
     const playedCards = useMemo<Card<Species, ActiveParts>[]>(() => {
         if (!actor) { return []; }
+        if (!me) { return []; }
+        if (!enemy) { return []; }
 
         const ref = me.team.champions.some(c => c.id === actor?.id)
             ? me.team
@@ -41,6 +42,9 @@ export default function HUD({ children }: PropsWithChildren) {
     }, [actor]);
 
     const handleChooseCard = (card: Card<Species, ActiveParts>, champion: Champion<Species>) => {
+        if (!me) { return []; }
+        if (!game) { return []; }
+
         me.team.playCard(card, champion);
 
         game.update({
@@ -49,6 +53,9 @@ export default function HUD({ children }: PropsWithChildren) {
     };
 
     const removeFromHand = (champion: Champion<Species>) => {
+        if (!me) { return []; }
+        if (!game) { return []; }
+
         me.team.resetHand(champion);
 
         game.update({
@@ -58,9 +65,13 @@ export default function HUD({ children }: PropsWithChildren) {
 
     const handleEndTurn = () => {
         if (!endTurn) { return; }
+        if (!me) { return; }
+        if (!round) { return; }
 
-        endTurn(me);
+        endTurn(me, round.id);
     };
+
+    if (!game || !me) { return <></>; }
 
     return (
         <Stack className="HUD" flexDirection="column" justifyContent="space-between" style={{ height: '100vh' }}>
@@ -76,7 +87,9 @@ export default function HUD({ children }: PropsWithChildren) {
                             {
                                 playedCards.map((card, index) => (
                                     <Slide enter key={card.id} delay={(index + 1) * 150} direction="top">
-                                        <CardComponent key={card.id} card={card} />
+                                        <button key={card.id}>
+                                            {card.name}
+                                        </button>
                                     </Slide>
                                 ))
                             }
@@ -85,42 +98,44 @@ export default function HUD({ children }: PropsWithChildren) {
                 )
             }
             <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
-                <div style={{ width: 200 }}>Round: {game.round}</div>
+                <Typography family="zuera" variant="h5" style={{ whiteSpace: 'nowrap' }}>
+                    Round: {game.round}
+                </Typography>
 
-                <Stack flexDirection="row" justifyContent="center">
+                <Stack flexDirection="row" justifyContent="center" style={{ marginLeft: -90 }}>
                     {
-                        game.turnOrder.map((champion, index) => (
-                            <Stack
-                                flexDirection="column"
-                                alignItems="center"
-                                key={champion.name}
-                                gap={5}
-                                style={{
-                                    color: me.team.champions.some(c => c.id === champion.id)
-                                        ? 'var(--info)'
-                                        : 'var(--error)'
-                                }}
-                            >
-
-                                <div>{index + 1}</div>
-                                <div>{champion.name}</div>
-                                <InPlayCardsByChampion champion={champion} onRemoveFromHand={removeFromHand} />
-                            </Stack>
-                        ))
+                        game.turnOrder
+                            .filter(c => c.isAlive)
+                            .map((champion, index) => (
+                                <div key={champion.id}>
+                                    <OrderItem
+                                        order={index + 1}
+                                        champion={champion}
+                                        isEnemy={!me.team.champions.some(c => c.id === champion.id)}
+                                    />
+                                    <InPlayCardsByChampion
+                                        champion={champion}
+                                        onRemoveFromHand={removeFromHand}
+                                    />
+                                </div>
+                            ))
                     }
                 </Stack>
             </Stack>
 
             {children}
 
-            <Stack flexDirection="column" alignItems="flex-end">
-                <div>
-                    <button onClick={handleEndTurn}>Próximo turno</button>
-                </div>
+            <Stack gap={0} flexDirection="column" alignItems="flex-end">
+                <Button disabled={hasAlreadyPlayed} onClick={handleEndTurn}>
+                    Próximo turno
+                </Button>
                 <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
-                    <div style={{ width: 200 }}>
-                        energy: {me.team.energyManager.energies}/10
-                    </div>
+                    <Stack gap={4} style={{ width: 200 }} alignItems="center">
+                        <BoltIcon size={22} />
+                        <Typography variant="h5" family="zuera">
+                            {me.team.energyManager.energies}/10
+                        </Typography>
+                    </Stack>
                     <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
                         {
                             game.turnOrder
@@ -139,7 +154,7 @@ export default function HUD({ children }: PropsWithChildren) {
                         }
                     </Stack>
                     <div style={{ width: 200 }}>
-                        DEATH DECK
+                        {me.team.deckManager.totalDeckDeath}
                     </div>
                 </Stack>
             </Stack>

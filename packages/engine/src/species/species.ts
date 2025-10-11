@@ -1,6 +1,6 @@
 import type { GeneParts } from '../parts';
 
-import bird from './bird';
+import reptile from './reptile';
 import fish from './fish';
 import type {
     Species,
@@ -12,10 +12,10 @@ export type Genes = typeof genes;
 
 export type ItemGene = { gene: GeneParts; name: string; species: Species };
 
-export const species: Species[] = ['bird', 'fish'];
+export const species: Species[] = ['reptile', 'fish'];
 
 export const speciesMap: SpeciesDetailsMap = {
-    bird,
+    reptile,
     fish,
 };
 
