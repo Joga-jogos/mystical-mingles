@@ -4,27 +4,27 @@ import Game from '@mystical-mingles/engine/game';
 import type { GameOptions } from '@mystical-mingles/engine/game';
 
 export default function useGame(_game: GameOptions, deps: any[]) {
-    const [game, setGame] = useState<Game>(new Game(_game));
+  const [game, setGame] = useState<Game>(new Game(_game));
 
-    useEffect(() => {
-        setGame(new Game(_game));
-    }, [...deps]);
+  useEffect(() => {
+    setGame(new Game(_game));
+  }, [...deps]);
 
-    const updateGame = (data: Partial<GameOptions>) => {
-        setGame(prev => {
-            const newGame = new Game({
-                ...prev,
-                ...data,
-                players: (data.players || prev.players)
-            });
+  const updateGame = (data: Partial<GameOptions>) => {
+    setGame(prev => {
+      const newGame = new Game({
+        ...prev,
+        ...data,
+        players: (data.players || prev.players)
+      });
 
-            newGame.update = prev.update;
+      newGame.update = prev.update;
 
-            return newGame;
-        });
-    };
+      return newGame;
+    });
+  };
 
-    game.update = updateGame;
+  game.update = updateGame;
 
-    return game;
+  return game;
 }

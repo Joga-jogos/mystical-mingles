@@ -11,12 +11,12 @@ interface ChampionEffectProps {
 }
 
 export default function ChampionEffect({ effect, value }: ChampionEffectProps) {
-    const Icon = getEffectIcon(effect);
+  const Icon = getEffectIcon(effect);
 
-    return (
-        <Stack justifyContent="center" alignItems="center" gap={4}>
-            <Icon fill="black" size={22} />
-            <Typography weight="bold">{value}</Typography>
-        </Stack>
-    );
+  return (
+    <Stack justifyContent="center" alignItems="center" gap={4}>
+      <Icon fill="black" size={22} />
+      <Typography weight="bold">{value}</Typography>
+    </Stack>
+  );
 }

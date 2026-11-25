@@ -15,22 +15,22 @@ interface MingleProps {
 }
 
 export default function Mingle({ options, size = 100 }: MingleProps) {
-    return (
-        <div
-            data-entity="mingle"
-            className="mingle"
-            style={{
-                color: options.color,
-                width: size,
-                height: size,
-            }}
-        >
-            <Body
-                eye={<Eyes name={options.genes.eye.name} />}
-                mouth={<Mouth name={options.genes.mouth.name} />}
-                back={<Back name={options.genes.back.name} />}
-                horn={<Horn name={options.genes.horn.name} />}
-            />
-        </div>
-    );
+  return (
+    <div
+      data-entity="mingle"
+      className="mingle"
+      style={{
+        color: options.color,
+        width: size,
+        height: size,
+      }}
+    >
+      <Body
+        eye={<Eyes name={options.genes.eye.name} />}
+        mouth={<Mouth name={options.genes.mouth.name} />}
+        back={<Back name={options.genes.back.name} />}
+        horn={<Horn name={options.genes.horn.name} />}
+      />
+    </div>
+  );
 }

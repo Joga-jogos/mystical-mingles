@@ -10,38 +10,38 @@ const GamePage = lazy(() => import('@/pages/Game'));
 const LobbyPage = lazy(() => import('@/pages/Lobby'));
 
 export const router = createBrowserRouter([
-    {
-        path: '',
+  {
+    path: '',
+    element: (
+      <App />
+    ),
+    children: [
+      {
+        path: '/',
+        element: <Navigate to='/lobby' />,
+      },
+      {
+        path: '/lobby',
+        loader: () => document.title = 'Mystical Mingles - Lobby',
         element: (
-            <App />
+          <MatchmakingProvider matchmakingServices={matchmakingServices}>
+            <LobbyPage />
+          </MatchmakingProvider>
         ),
-        children: [
-            {
-                path: '/',
-                element: <Navigate to='/lobby' />,
-            },
-            {
-                path: '/lobby',
-                loader: () => document.title = 'Mystical Mingles - Lobby',
-                element: (
-                    <MatchmakingProvider matchmakingServices={matchmakingServices}>
-                        <LobbyPage />
-                    </MatchmakingProvider>
-                ),
-            },
-            {
-                path: '/game/:id',
-                loader: () => document.title = 'Mystical Mingles',
-                element: (
-                    <MatchmakingProvider matchmakingServices={matchmakingServices}>
-                        <GamePage />
-                    </MatchmakingProvider>
-                ),
-            },
-            {
-                path: '*',
-                element: <Navigate to='/lobby' />,
-            }
-        ],
-    }
+      },
+      {
+        path: '/game/:id',
+        loader: () => document.title = 'Mystical Mingles',
+        element: (
+          <MatchmakingProvider matchmakingServices={matchmakingServices}>
+            <GamePage />
+          </MatchmakingProvider>
+        ),
+      },
+      {
+        path: '*',
+        element: <Navigate to='/lobby' />,
+      }
+    ],
+  }
 ]);

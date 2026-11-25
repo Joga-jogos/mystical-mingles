@@ -14,11 +14,11 @@ interface GetTarget {
 }
 
 export function getTarget({ team, card, champion }: GetTarget) {
-    if (card.effect.type !== 'backdoor') { return getClosest(champion, team.alives); }
+  if (card.effect.type !== 'backdoor') { return getClosest(champion, team.alives); }
 
-    if (card.effect.name === 'slower') { return team.lessSpeed; }
-    if (card.effect.name === 'faster') { return team.higherSpeed; }
-    if (card.effect.name === 'less_life') { return team.lessLife; }
+  if (card.effect.name === 'slower') { return team.lessSpeed; }
+  if (card.effect.name === 'faster') { return team.higherSpeed; }
+  if (card.effect.name === 'less_life') { return team.lessLife; }
 
-    return getClosest(champion, team.alives);
+  return getClosest(champion, team.alives);
 }

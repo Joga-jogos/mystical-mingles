@@ -20,46 +20,46 @@ interface DeckProps {
 }
 
 export default function Deck({ order, champion, cards, onChoose }: DeckProps) {
-    const { me } = useGameControl();
+  const { me } = useGameControl();
 
-    const handleChoose = (card: Card<Species, ActiveParts>) => { onChoose(card); };
+  const handleChoose = (card: Card<Species, ActiveParts>) => { onChoose(card); };
 
-    if (!me) { return <></>; }
+  if (!me) { return <></>; }
 
-    return (
-        <Stack
-            gap={5}
-            className="deck"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-        >
-            <Stack gap={0} alignItems="center" justifyContent="center">
-                {
-                    cards
-                        .sort((a, b) => a.name > b.name ? 1 : -1)
-                        .map((card) => (
-                            <div key={card.id} className="deck-card-container">
-                                <button
-                                    className="deck-card-button"
-                                    onClick={() => handleChoose(card)}
-                                >
-                                    <CardUI card={card} />
-                                </button>
-                                <div className="deck-card-fake">
-                                    <CardUI card={card} />
-                                </div>
-                            </div>
-                        ))
-                }
-            </Stack>
-            <div className="deck-mingle">
-                <OrderItem
-                    order={order}
-                    champion={champion}
-                    isEnemy={!me.team.champions.some(c => c.id === champion.id)}
-                />
-            </div>
-        </Stack>
-    );
+  return (
+    <Stack
+      gap={5}
+      className="deck"
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="column"
+    >
+      <Stack gap={0} alignItems="center" justifyContent="center">
+        {
+          cards
+            .sort((a, b) => a.name > b.name ? 1 : -1)
+            .map((card) => (
+              <div key={card.id} className="deck-card-container">
+                <button
+                  className="deck-card-button"
+                  onClick={() => handleChoose(card)}
+                >
+                  <CardUI card={card} />
+                </button>
+                <div className="deck-card-fake">
+                  <CardUI card={card} />
+                </div>
+              </div>
+            ))
+        }
+      </Stack>
+      <div className="deck-mingle">
+        <OrderItem
+          order={order}
+          champion={champion}
+          isEnemy={!me.team.champions.some(c => c.id === champion.id)}
+        />
+      </div>
+    </Stack>
+  );
 }

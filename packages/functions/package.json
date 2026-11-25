@@ -9,7 +9,9 @@
         "build": "tsc",
         "watch": "tsc -w",
         "serve": "firebase emulators:start",
-        "deploy": "firebase deploy --only functions"
+        "deploy": "firebase deploy --only functions",
+        "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "lint:fix": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"
     },
     "dependencies": {
         "firebase-admin": "^13.5.0",

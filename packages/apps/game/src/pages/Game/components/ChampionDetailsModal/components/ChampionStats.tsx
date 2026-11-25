@@ -11,23 +11,23 @@ interface ChampionStatsProps {
 
 export default function ChampionStats({ color, value, Icon }: ChampionStatsProps) {
 
-    return (
-        <Stack gap={8} alignItems="center"
-        >
-            <div
-                className="stats__button"
-                style={{
-                    background: getOpacityColor(color, .2),
-                }}
-            >
-                <Icon
-                    size={24}
-                    style={{ color }}
-                />
-            </div>
-            <Typography variant="h6">
-                {value}
-            </Typography>
-        </Stack>
-    );
+  return (
+    <Stack gap={8} alignItems="center"
+    >
+      <div
+        className="stats__button"
+        style={{
+          background: getOpacityColor(color, .2),
+        }}
+      >
+        <Icon
+          size={24}
+          style={{ color }}
+        />
+      </div>
+      <Typography variant="h6">
+        {value}
+      </Typography>
+    </Stack>
+  );
 }

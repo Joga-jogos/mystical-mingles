@@ -5,8 +5,8 @@ import { generateTeam } from '../team';
 import Player from './player';
 
 export function generatePlayer() {
-    return new Player({
-        id: uuid(),
-        team: generateTeam()
-    });
+  return new Player({
+    id: uuid(),
+    team: generateTeam()
+  });
 }

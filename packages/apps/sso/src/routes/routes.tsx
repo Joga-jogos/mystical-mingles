@@ -4,25 +4,25 @@ import App from '@/App';
 import Signin from '@/pages/Signin';
 
 export const router = createBrowserRouter([
-    {
-        path: '',
-        element: (
-            <App />
-        ),
-        children: [
-            {
-                path: '/',
-                element: <Navigate to='/signin' />,
-            },
-            {
-                path: '/signin',
-                loader: () => document.title = '👽 Mystical Mingles - Login',
-                element: <Signin />,
-            },
-            {
-                path: '*',
-                element: <Navigate to='/signin' />,
-            }
-        ]
-    },
+  {
+    path: '',
+    element: (
+      <App />
+    ),
+    children: [
+      {
+        path: '/',
+        element: <Navigate to='/signin' />,
+      },
+      {
+        path: '/signin',
+        loader: () => document.title = '👽 Mystical Mingles - Login',
+        element: <Signin />,
+      },
+      {
+        path: '*',
+        element: <Navigate to='/signin' />,
+      }
+    ]
+  },
 ]);

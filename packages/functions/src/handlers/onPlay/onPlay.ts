@@ -13,40 +13,40 @@ const firestore = getFirestore();
 const db = new DB(firestore);
 
 export default onDocumentUpdated('matchmaking/{matchId}/rounds/{roundId}', async (event) => {
-    const before = event.data?.before.data() as MatchmakingRound;
-    const after = event.data?.after.data() as MatchmakingRound;
+  const before = event.data?.before.data() as MatchmakingRound;
+  const after = event.data?.after.data() as MatchmakingRound;
 
-    if (!before || !after) { return; };
+  if (!before || !after) { return; };
 
-    const matchmakingId = event.params.matchId;
+  const matchmakingId = event.params.matchId;
 
-    const isPlaying = after.status === 'playing';
-    const isAnimating = after.status === 'animating';
+  const isPlaying = after.status === 'playing';
+  const isAnimating = after.status === 'animating';
 
-    const everyoneHasAlreadyPlayed = after.whoHasAlreadyPlayed.length === 2;
-    const everyoneHasAlreadySawAnimation = after.whoSawTheAnimation.length === 2;
+  const everyoneHasAlreadyPlayed = after.whoHasAlreadyPlayed.length === 2;
+  const everyoneHasAlreadySawAnimation = after.whoSawTheAnimation.length === 2;
 
-    const matchmaking = await getMatchmaking({ id: matchmakingId, db });
+  const matchmaking = await getMatchmaking({ id: matchmakingId, db });
 
-    // GERA AS AÇÕES DO TURNO
-    if (isPlaying && everyoneHasAlreadyPlayed && !everyoneHasAlreadySawAnimation) {
-        logger.debug('>>> GENERATE ACTION', after.id);
-        return generateActions({
-            db,
-            matchmaking,
-            round: after,
-            lastRound: before,
-        });
-    }
+  // GERA AS AÇÕES DO TURNO
+  if (isPlaying && everyoneHasAlreadyPlayed && !everyoneHasAlreadySawAnimation) {
+    logger.debug('>>> GENERATE ACTION', after.id);
+    return generateActions({
+      db,
+      matchmaking,
+      round: after,
+      lastRound: before,
+    });
+  }
 
-    // PREPARA PROXIMO TURNO
-    if (isAnimating && everyoneHasAlreadySawAnimation) {
-        logger.debug('>>> PREPARA O PROXIMO ROUND');
-        return setNextRound({
-            db,
-            matchmaking,
-            round: after,
-            lastRound: before,
-        });
-    }
+  // PREPARA PROXIMO TURNO
+  if (isAnimating && everyoneHasAlreadySawAnimation) {
+    logger.debug('>>> PREPARA O PROXIMO ROUND');
+    return setNextRound({
+      db,
+      matchmaking,
+      round: after,
+      lastRound: before,
+    });
+  }
 });

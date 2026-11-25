@@ -11,42 +11,42 @@ interface InPlayCardsByChampionProps {
 }
 
 export default function InPlayCardsByChampion({ champion, onRemoveFromHand }: InPlayCardsByChampionProps) {
-    const { game, me, enemy } = useGameControl();
+  const { game, me, enemy } = useGameControl();
 
-    if (!game) { return; }
-    if (!me) { return; }
-    if (!enemy) { return; }
+  if (!game) { return; }
+  if (!me) { return; }
+  if (!enemy) { return; }
 
-    const handleRemoveHand = () => { onRemoveFromHand(champion); };
+  const handleRemoveHand = () => { onRemoveFromHand(champion); };
 
-    return (
-        <div className="hand-cards">
-            {
-                me.team.deckManager.inPlay[champion.id] &&
+  return (
+    <div className="hand-cards">
+      {
+        me.team.deckManager.inPlay[champion.id] &&
                 me.team.deckManager.inPlay[champion.id].map((card, index) => (
-                    <button
-                        key={card.id}
-                        className="hand-cards__card"
-                        style={{ bottom: -(70 + (40 * index)) }}
-                        onClick={handleRemoveHand}
-                    >
-                        {card.name}
-                    </button>
+                  <button
+                    key={card.id}
+                    className="hand-cards__card"
+                    style={{ bottom: -(70 + (40 * index)) }}
+                    onClick={handleRemoveHand}
+                  >
+                    {card.name}
+                  </button>
                 ))
-            }
-            {
-                enemy.team.deckManager.inPlay[champion.id] &&
+      }
+      {
+        enemy.team.deckManager.inPlay[champion.id] &&
                 enemy.team.deckManager.inPlay[champion.id].map((card, index) => (
-                    <button
-                        key={card.id}
-                        className="hand-cards__card"
-                        style={{ bottom: -(70 + (40 * index)) }}
-                        onClick={handleRemoveHand}
-                    >
-                        {card.name}
-                    </button>
+                  <button
+                    key={card.id}
+                    className="hand-cards__card"
+                    style={{ bottom: -(70 + (40 * index)) }}
+                    onClick={handleRemoveHand}
+                  >
+                    {card.name}
+                  </button>
                 ))
-            }
-        </div>
-    );
+      }
+    </div>
+  );
 }

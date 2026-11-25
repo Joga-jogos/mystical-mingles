@@ -15,54 +15,54 @@ interface BuyCardsOptions {
 }
 
 function initHand(champions: ChampionOptionsWithMingleOptions<Species>[]): Deck {
-    return {
-        [champions[0].mingle.id]: [],
-        [champions[1].mingle.id]: [],
-        [champions[2].mingle.id]: []
-    };
+  return {
+    [champions[0].mingle.id]: [],
+    [champions[1].mingle.id]: [],
+    [champions[2].mingle.id]: []
+  };
 }
 
 function getValidCard(
-    champions: ChampionOptionsWithMingleOptions<Species>[],
-    currentDeck: MatchmakingDeck,
-    deck: MatchmakingDeck
+  champions: ChampionOptionsWithMingleOptions<Species>[],
+  currentDeck: MatchmakingDeck,
+  deck: MatchmakingDeck
 ) {
-    const pickedChampion = getRandom(champions);
-    const championDeck = currentDeck[pickedChampion.mingle.id];
+  const pickedChampion = getRandom(champions);
+  const championDeck = currentDeck[pickedChampion.mingle.id];
 
-    // se campeão cheio, tenta outro
-    if (championDeck.length >= 8) {
-        const withoutCurrent = champions.filter(c => c.mingle.id !== pickedChampion.mingle.id);
-        if (withoutCurrent.length === 0) throw new Error('Todos os campeões estão cheios');
+  // se campeão cheio, tenta outro
+  if (championDeck.length >= 8) {
+    const withoutCurrent = champions.filter(c => c.mingle.id !== pickedChampion.mingle.id);
+    if (withoutCurrent.length === 0) throw new Error('Todos os campeões estão cheios');
 
-        return getValidCard(withoutCurrent, currentDeck, deck);
-    }
+    return getValidCard(withoutCurrent, currentDeck, deck);
+  }
 
-    const pickedCard = { ...getRandom(deck[pickedChampion.mingle.id]), id: uuid() };
+  const pickedCard = { ...getRandom(deck[pickedChampion.mingle.id]), id: uuid() };
 
-    const existingCount = championDeck.filter(c => c.name === pickedCard.name).length;
+  const existingCount = championDeck.filter(c => c.name === pickedCard.name).length;
 
-    // não pode ter mais de 2 iguais
-    if (existingCount >= 2) {
-        return getValidCard(champions, currentDeck, deck);
-    }
+  // não pode ter mais de 2 iguais
+  if (existingCount >= 2) {
+    return getValidCard(champions, currentDeck, deck);
+  }
 
-    return { pickedChampion, pickedCard };
+  return { pickedChampion, pickedCard };
 }
 
 export function buyCards({
-    deck,
-    count,
-    champions,
-    hand
+  deck,
+  count,
+  champions,
+  hand
 }: BuyCardsOptions): MatchmakingDeck {
-    const acc = hand || initHand(champions);
+  const acc = hand || initHand(champions);
 
-    return getFilledArray(count).reduce((deckAcc) => {
-        const { pickedChampion, pickedCard } = getValidCard(champions, deckAcc, deck);
+  return getFilledArray(count).reduce((deckAcc) => {
+    const { pickedChampion, pickedCard } = getValidCard(champions, deckAcc, deck);
 
-        deckAcc[pickedChampion.mingle.id] = [...deckAcc[pickedChampion.mingle.id], pickedCard];
+    deckAcc[pickedChampion.mingle.id] = [...deckAcc[pickedChampion.mingle.id], pickedCard];
 
-        return deckAcc;
-    }, acc);
+    return deckAcc;
+  }, acc);
 }

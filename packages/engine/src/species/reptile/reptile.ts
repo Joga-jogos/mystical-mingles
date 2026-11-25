@@ -25,42 +25,42 @@ export class Reptile<
     Colors extends ReptileColors,
     S extends Species = 'reptile'
 > implements SpeciesOptions<S, G, Colors> {
-    public readonly colors: Colors;
-    public readonly category: Category;
-    public readonly stats: SpeciesStats;
-    public readonly genes: SpeciesGenes<G>;
-    public readonly cards: SpeciesCards<S>;
-    public readonly life_multiplicator: number;
+  public readonly colors: Colors;
+  public readonly category: Category;
+  public readonly stats: SpeciesStats;
+  public readonly genes: SpeciesGenes<G>;
+  public readonly cards: SpeciesCards<S>;
+  public readonly life_multiplicator: number;
 
-    constructor({ genes: parts, cards, colors, stats, category, life_multiplicator }: SpeciesOptions<S, G, Colors>) {
-        this.genes = parts;
-        this.cards = cards;
-        this.stats = stats;
-        this.colors = colors;
-        this.category = category;
-        this.life_multiplicator = life_multiplicator;
-    }
+  constructor({ genes: parts, cards, colors, stats, category, life_multiplicator }: SpeciesOptions<S, G, Colors>) {
+    this.genes = parts;
+    this.cards = cards;
+    this.stats = stats;
+    this.colors = colors;
+    this.category = category;
+    this.life_multiplicator = life_multiplicator;
+  }
 }
 
 export default new Reptile({
-    genes: {
-        eye: EYES,
-        horn: HORNS,
-        tail: TAILS,
-        mouth: MOUTHS,
-        back: BACK,
-    },
-    cards: {
-        horn: HORN_CARDS,
-        tail: TAIL_CARDS,
-        back: BACK_CARDS,
-        mouth: MOUTH_CARDS,
-    },
-    stats: {
-        base: { life: 39, speed: 35, fury: 35 },
-        part: { life: 3, speed: 1, fury: 0 },
-    },
-    category: 'tank',
-    colors: [...COLORS],
-    life_multiplicator: 9
+  genes: {
+    eye: EYES,
+    horn: HORNS,
+    tail: TAILS,
+    mouth: MOUTHS,
+    back: BACK,
+  },
+  cards: {
+    horn: HORN_CARDS,
+    tail: TAIL_CARDS,
+    back: BACK_CARDS,
+    mouth: MOUTH_CARDS,
+  },
+  stats: {
+    base: { life: 39, speed: 35, fury: 35 },
+    part: { life: 3, speed: 1, fury: 0 },
+  },
+  category: 'tank',
+  colors: [...COLORS],
+  life_multiplicator: 9
 });

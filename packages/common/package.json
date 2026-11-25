@@ -22,7 +22,8 @@
   "scripts": {
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "1.9.0",

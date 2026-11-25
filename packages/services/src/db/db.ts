@@ -1,21 +1,21 @@
 import type {
-    Firestore,
-    Transaction,
-    DocumentData,
-    WithFieldValue,
-    WhereFilterOp,
+  Firestore,
+  Transaction,
+  DocumentData,
+  WithFieldValue,
+  WhereFilterOp,
 } from 'firebase/firestore';
 import {
-    doc,
-    query,
-    where,
-    setDoc,
-    getDocs,
-    deleteDoc,
-    updateDoc,
-    collection,
-    onSnapshot,
-    runTransaction,
+  doc,
+  query,
+  where,
+  setDoc,
+  getDocs,
+  deleteDoc,
+  updateDoc,
+  collection,
+  onSnapshot,
+  runTransaction,
 } from 'firebase/firestore';
 
 import { Path, ArrayOrObject } from '@mystical-mingles/toolkit/interface';
@@ -48,80 +48,80 @@ type CollectionWithFilters<F extends Field> = Omit<CollectionData<F>, 'data'>;
 type CollectionWithOnlyPaths<F extends Field> = Omit<CollectionData<F>, 'data' | 'filters'>;
 
 export default class DB {
-    constructor(private db: Firestore) { }
+  constructor(private db: Firestore) { }
 
-    public async setItem<F extends Field>({ path, data, pathSegments }: CollectionWithData<F>) {
-        const ref = doc(this.db, path, ...pathSegments);
+  public async setItem<F extends Field>({ path, data, pathSegments }: CollectionWithData<F>) {
+    const ref = doc(this.db, path, ...pathSegments);
 
-        return setDoc(ref, data);
-    }
+    return setDoc(ref, data);
+  }
 
-    public async deleteItem<F extends Field>({ path, pathSegments }: CollectionWithOnlyPaths<F>) {
-        const ref = doc(this.db, path, ...pathSegments);
+  public async deleteItem<F extends Field>({ path, pathSegments }: CollectionWithOnlyPaths<F>) {
+    const ref = doc(this.db, path, ...pathSegments);
 
-        return deleteDoc(ref);
-    }
+    return deleteDoc(ref);
+  }
 
-    public async getItem<F extends Field>({ path, filters, pathSegments }: CollectionWithFilters<F>) {
-        const q = query(
-            collection(this.db, path, ...pathSegments),
-            ...filters.map(({ field, operator, value }) => where(field as string, operator, value))
-        );
+  public async getItem<F extends Field>({ path, filters, pathSegments }: CollectionWithFilters<F>) {
+    const q = query(
+      collection(this.db, path, ...pathSegments),
+      ...filters.map(({ field, operator, value }) => where(field as string, operator, value))
+    );
 
-        return getDocs(q)
-            .then((querySnapshot) => {
-                const result = querySnapshot.docs.map((doc) => doc.data() as F);
-                return result ? result[0] : null;
-            });
-    }
+    return getDocs(q)
+      .then((querySnapshot) => {
+        const result = querySnapshot.docs.map((doc) => doc.data() as F);
+        return result ? result[0] : null;
+      });
+  }
 
-    public async getList<F extends Field>({ path, filters, pathSegments }: CollectionWithFilters<F>) {
-        const q = query(
-            collection(this.db, path, ...pathSegments),
-            ...filters.map(({ field, operator, value }) => where(field as string, operator, value))
-        );
+  public async getList<F extends Field>({ path, filters, pathSegments }: CollectionWithFilters<F>) {
+    const q = query(
+      collection(this.db, path, ...pathSegments),
+      ...filters.map(({ field, operator, value }) => where(field as string, operator, value))
+    );
 
-        return getDocs(q)
-            .then((querySnapshot) => {
-                return querySnapshot.docs.map<F>((doc) => doc.data() as F);
-            });
-    }
+    return getDocs(q)
+      .then((querySnapshot) => {
+        return querySnapshot.docs.map<F>((doc) => doc.data() as F);
+      });
+  }
 
-    public async update({
-        path,
-        pathSegments,
-        data,
-    }: CollectionSegmentData) {
-        const ref = doc(this.db, path, ...pathSegments);
+  public async update({
+    path,
+    pathSegments,
+    data,
+  }: CollectionSegmentData) {
+    const ref = doc(this.db, path, ...pathSegments);
 
-        updateDoc(ref, data);
-    }
+    updateDoc(ref, data);
+  }
 
-    public async transaction<F extends Field>() {
-        const getRef = ({ path, pathSegments }: CollectionWithOnlyPaths<F>) => doc(this.db, path, ...pathSegments);
+  public async transaction<F extends Field>() {
+    const getRef = ({ path, pathSegments }: CollectionWithOnlyPaths<F>) => doc(this.db, path, ...pathSegments);
 
-        const transaction = async (callback: (t: Transaction) => void) => {
-            return await runTransaction(this.db, async (transaction) => {
-                return callback(transaction);
-            });
-        };
+    const transaction = async (callback: (t: Transaction) => void) => {
+      return await runTransaction(this.db, async (transaction) => {
+        return callback(transaction);
+      });
+    };
 
-        return { getRef, transaction };
-    }
+    return { getRef, transaction };
+  }
 
-    public subscribe<F extends Field>(
-        { path, pathSegments, filters }: CollectionWithFilters<F>,
-        callback: (data: F) => void
-    ) {
-        const q = query(
-            collection(this.db, path, ...pathSegments),
-            ...filters.map(({ field, operator, value }) => where(field as string, operator, value))
-        );
+  public subscribe<F extends Field>(
+    { path, pathSegments, filters }: CollectionWithFilters<F>,
+    callback: (data: F) => void
+  ) {
+    const q = query(
+      collection(this.db, path, ...pathSegments),
+      ...filters.map(({ field, operator, value }) => where(field as string, operator, value))
+    );
 
-        return onSnapshot(q, (snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                callback(change.doc.data() as F);
-            });
-        });
-    }
+    return onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        callback(change.doc.data() as F);
+      });
+    });
+  }
 }

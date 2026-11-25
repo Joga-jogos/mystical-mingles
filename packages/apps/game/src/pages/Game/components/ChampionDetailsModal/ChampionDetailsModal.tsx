@@ -24,84 +24,84 @@ import ChampionStats from './components/ChampionStats';
 import './ChampionDetailsModal.scss';
 
 export default function ChampionDetailsModal({
-    isOpen,
-    champion,
-    onToggleModal,
+  isOpen,
+  champion,
+  onToggleModal,
 }: HelperModalProps<{
     champion: Champion<Species>
 }>) {
-    const MAP_COLORS: { [X in keyof Stats]: string } = {
-        life: '#34C375',
-        fury: '#C33C38',
-        speed: '#F6AD05',
-    };
+  const MAP_COLORS: { [X in keyof Stats]: string } = {
+    life: '#34C375',
+    fury: '#C33C38',
+    speed: '#F6AD05',
+  };
 
-    const championCards = useMemo(() => activeParts.reduce<{
+  const championCards = useMemo(() => activeParts.reduce<{
         [A in ActiveParts]: Card<Species, ActiveParts>;
     }>((acc, part) => {
-        const card = champion.cards[part];
+      const card = champion.cards[part];
 
-        acc[part] = cards[card.species][part].find(card => {
-            return card.name === champion.cards[part].name;
-        }) as Card<Species, ActiveParts>;
+      acc[part] = cards[card.species][part].find(card => {
+        return card.name === champion.cards[part].name;
+      }) as Card<Species, ActiveParts>;
 
-        return acc;
+      return acc;
     }, {} as { [A in ActiveParts]: Card<Species, ActiveParts> }), [champion]);
 
-    return (
-        <Modal
-            open={isOpen}
-            onClose={onToggleModal}
-            className="champion-details-modal"
-            style={{
-                width: 'fit-content'
-            }}
-        >
-            <Grid gap={24}>
-                <GridItem xl={12} placeItems="center">
-                    <Stack justifyContent="center" flexDirection="column" alignItems="center">
-                        <Typography>
-                            {champion.id}
-                        </Typography>
-                        <Typography variant="h5">
-                            {champion.name}
-                        </Typography>
-                    </Stack>
-                </GridItem>
-                <GridItem xl={6} placeItems="center">
-                    <MingleUI
-                        options={champion.options.mingle}
-                        size={160}
-                    />
-                </GridItem>
-                <GridItem xl={6} alignSelf="center">
-                    <Stack>
-                        <ChampionStats
-                            color={MAP_COLORS.fury}
-                            value={champion.stats.fury}
-                            Icon={FireIcon}
-                        />
-                        <ChampionStats
-                            color={MAP_COLORS.life}
-                            value={champion.stats.life}
-                            Icon={HeartIcon}
-                        />
-                        <ChampionStats
-                            color={MAP_COLORS.speed}
-                            value={champion.stats.speed}
-                            Icon={FastIcon}
-                        />
-                    </Stack>
-                </GridItem>
-                <GridItem xl={12}>
-                    <Stack>
-                        <CardUI card={championCards.back} />
-                        <CardUI card={championCards.horn} />
-                        <CardUI card={championCards.mouth} />
-                        <CardUI card={championCards.tail} />
-                    </Stack>
-                </GridItem>
-            </Grid>
-        </Modal>
-    );
+  return (
+    <Modal
+      open={isOpen}
+      onClose={onToggleModal}
+      className="champion-details-modal"
+      style={{
+        width: 'fit-content'
+      }}
+    >
+      <Grid gap={24}>
+        <GridItem xl={12} placeItems="center">
+          <Stack justifyContent="center" flexDirection="column" alignItems="center">
+            <Typography>
+              {champion.id}
+            </Typography>
+            <Typography variant="h5">
+              {champion.name}
+            </Typography>
+          </Stack>
+        </GridItem>
+        <GridItem xl={6} placeItems="center">
+          <MingleUI
+            options={champion.options.mingle}
+            size={160}
+          />
+        </GridItem>
+        <GridItem xl={6} alignSelf="center">
+          <Stack>
+            <ChampionStats
+              color={MAP_COLORS.fury}
+              value={champion.stats.fury}
+              Icon={FireIcon}
+            />
+            <ChampionStats
+              color={MAP_COLORS.life}
+              value={champion.stats.life}
+              Icon={HeartIcon}
+            />
+            <ChampionStats
+              color={MAP_COLORS.speed}
+              value={champion.stats.speed}
+              Icon={FastIcon}
+            />
+          </Stack>
+        </GridItem>
+        <GridItem xl={12}>
+          <Stack>
+            <CardUI card={championCards.back} />
+            <CardUI card={championCards.horn} />
+            <CardUI card={championCards.mouth} />
+            <CardUI card={championCards.tail} />
+          </Stack>
+        </GridItem>
+      </Grid>
+    </Modal>
+  );
 }

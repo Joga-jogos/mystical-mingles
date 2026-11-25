@@ -12,29 +12,29 @@ const firestore = getFirestore();
 const db = new DB(firestore);
 
 export default onDocumentUpdated('matchmaking/{matchId}', async (event) => {
-    const before = event.data?.before.data() as MatchmakingData;
-    const after = event.data?.after.data() as MatchmakingData;
+  const before = event.data?.before.data() as MatchmakingData;
+  const after = event.data?.after.data() as MatchmakingData;
 
-    if (!before || !after) { return; };
+  if (!before || !after) { return; };
 
-    const matchmakingId = event.params.matchId;
+  const matchmakingId = event.params.matchId;
 
-    const areAllOnline = Object.keys(after.players).length === 2;
-    const isReady = after.status === 'ready';
-    const isWaiting = after.status === 'waiting';
+  const areAllOnline = Object.keys(after.players).length === 2;
+  const isReady = after.status === 'ready';
+  const isWaiting = after.status === 'waiting';
 
-    // ESPERANDO TODOS OS JOGADORES
-    if (!areAllOnline) { return; }
+  // ESPERANDO TODOS OS JOGADORES
+  if (!areAllOnline) { return; }
 
-    // TURNO EM ANDAMENTO
-    if (areAllOnline && isReady) { return; }
+  // TURNO EM ANDAMENTO
+  if (areAllOnline && isReady) { return; }
 
-    // INICIA O JOGO
-    if (areAllOnline && isWaiting) {
-        return initGame({
-            db,
-            id: matchmakingId,
-            matchmaking: after,
-        });
-    }
+  // INICIA O JOGO
+  if (areAllOnline && isWaiting) {
+    return initGame({
+      db,
+      id: matchmakingId,
+      matchmaking: after,
+    });
+  }
 });

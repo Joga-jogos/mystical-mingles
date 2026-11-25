@@ -23,43 +23,43 @@ type Data = {
 }
 
 export function getDamage({ champion, target, card }: GetDamage): Data {
-    let damage = card.attack;
-    let critical = false;
-    let truedamage = false;
+  let damage = card.attack;
+  let critical = false;
+  let truedamage = false;
 
-    if (champion.debuffs.stun) {
-        return { damage: 0, miss: true, critical, truedamage, };
-    }
+  if (champion.debuffs.stun) {
+    return { damage: 0, miss: true, critical, truedamage, };
+  }
 
-    if (champion.buffs.raise_damage) {
-        damage += buffsMultiplicators.damage(card.attack) * champion.buffs.raise_damage;
-    }
+  if (champion.buffs.raise_damage) {
+    damage += buffsMultiplicators.damage(card.attack) * champion.buffs.raise_damage;
+  }
 
-    if (card.species === champion.species) {
-        damage += card.attack * .1;
-    }
+  if (card.species === champion.species) {
+    damage += card.attack * .1;
+  }
 
-    const cardCategory = categories[card.species];
-    const actorCategory = categories[champion.species];
+  const cardCategory = categories[card.species];
+  const actorCategory = categories[champion.species];
 
-    // Vatagem ou desvantagem da carta
-    if (interaction[cardCategory].advantage === target.category) { damage += card.attack * .15; }
-    if (interaction[cardCategory].disadvantage === target.category) { damage -= card.attack * .15; }
+  // Vatagem ou desvantagem da carta
+  if (interaction[cardCategory].advantage === target.category) { damage += card.attack * .15; }
+  if (interaction[cardCategory].disadvantage === target.category) { damage -= card.attack * .15; }
 
-    // Vatagem ou desvantagem da espécie do atacante
-    if (interaction[actorCategory].advantage === target.category) { damage += card.attack * .15; }
-    if (interaction[actorCategory].disadvantage === target.category) { damage -= card.attack * .15; }
+  // Vatagem ou desvantagem da espécie do atacante
+  if (interaction[actorCategory].advantage === target.category) { damage += card.attack * .15; }
+  if (interaction[actorCategory].disadvantage === target.category) { damage -= card.attack * .15; }
 
-    critical = probably(champion.stats.fury / 1000);
+  critical = probably(champion.stats.fury / 1000);
 
-    if (critical) { damage += card.attack * .5; }
+  if (critical) { damage += card.attack * .5; }
 
-    if (target.debuffs.stun) { truedamage = true; }
+  if (target.debuffs.stun) { truedamage = true; }
 
-    return {
-        miss: false,
-        damage,
-        critical,
-        truedamage,
-    };
+  return {
+    miss: false,
+    damage,
+    critical,
+    truedamage,
+  };
 }

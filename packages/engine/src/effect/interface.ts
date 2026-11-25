@@ -13,31 +13,31 @@ export type BuffAndDebuff = Buff | Debuff;
 export type Effect = Buff | Debuff | Backdoor | Resource | Situational;
 
 export const buffs = [
-    'raise_damage',
-    'raise_speed',
-    'raise_fury',
+  'raise_damage',
+  'raise_speed',
+  'raise_fury',
 ] as const;
 
 export const debuffs = [
-    'slowness',
-    'stun',
+  'slowness',
+  'stun',
 ] as const;
 
 export const backdoor = [
-    'faster',
-    'slower',
-    'less_life',
+  'faster',
+  'slower',
+  'less_life',
 ] as const;
 
 export const resource = [
-    'heal',
-    'heal_damage',
-    'energy_gain',
-    'energy_steal',
-    'energy_destroy',
+  'heal',
+  'heal_damage',
+  'energy_gain',
+  'energy_steal',
+  'energy_destroy',
 ] as const;
 
 export const situational = [
-    'increase_damage_last',
-    'increase_damage_first',
+  'increase_damage_last',
+  'increase_damage_first',
 ] as const;

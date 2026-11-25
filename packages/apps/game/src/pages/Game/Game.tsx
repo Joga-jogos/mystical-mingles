@@ -14,35 +14,35 @@ interface GameBaseProps {
 }
 
 export function GameBase({ gameOptions }: GameBaseProps) {
-    const game = useGame({
-        id: gameOptions.id,
-        round: gameOptions.round,
-        players: gameOptions.players,
-        createdAt: gameOptions.createdAt,
-        priority: gameOptions.priority
-    }, []);
+  const game = useGame({
+    id: gameOptions.id,
+    round: gameOptions.round,
+    players: gameOptions.players,
+    createdAt: gameOptions.createdAt,
+    priority: gameOptions.priority
+  }, []);
 
-    return (
-        <GameProvider game={game}>
-            <HUD>
-                <Arena />
-            </HUD>
-        </GameProvider>
-    );
+  return (
+    <GameProvider game={game}>
+      <HUD>
+        <Arena />
+      </HUD>
+    </GameProvider>
+  );
 }
 
 export default function Game() {
-    const { gameOptions, getMatchMaking } = useMatchmaking();
+  const { gameOptions, getMatchMaking } = useMatchmaking();
 
-    useEffect(() => {
-        if (!getMatchMaking) { return; }
+  useEffect(() => {
+    if (!getMatchMaking) { return; }
 
-        getMatchMaking();
-    }, []);
+    getMatchMaking();
+  }, []);
 
-    if (!gameOptions) { return <>carregando...</>; }
+  if (!gameOptions) { return <>carregando...</>; }
 
-    return (
-        <GameBase gameOptions={gameOptions} />
-    );
+  return (
+    <GameBase gameOptions={gameOptions} />
+  );
 }

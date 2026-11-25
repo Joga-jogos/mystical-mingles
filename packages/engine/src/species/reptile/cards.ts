@@ -1,17 +1,17 @@
 import Card from '../../card';
 
 export const HORN_CARDS: Card<'reptile', 'horn'>[] = [
-    new Card({
-        cost: 1,
-        attack: 150,
-        shield: 30,
-        part: 'horn',
-        species: 'reptile',
-        name: 'reptile horn 1',
-        description: 'Aplique ataque+ a este Mingle ao atacar alvos Planta ou Réptil',
-        type: 'ranged',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  new Card({
+    cost: 1,
+    attack: 150,
+    shield: 30,
+    part: 'horn',
+    species: 'reptile',
+    name: 'reptile horn 1',
+    description: 'Aplique ataque+ a este Mingle ao atacar alvos Planta ou Réptil',
+    type: 'ranged',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -20,18 +20,18 @@ export const HORN_CARDS: Card<'reptile', 'horn'>[] = [
             }
         }
         /* eslint-enable */
-    }),
-    new Card({
-        cost: 1,
-        attack: 60,
-        shield: 60,
-        part: 'horn',
-        species: 'reptile',
-        name: 'reptile horn 2',
-        description: 'Cure este Mingle com o dano causado por esta carta.',
-        type: 'ranged',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  }),
+  new Card({
+    cost: 1,
+    attack: 60,
+    shield: 60,
+    part: 'horn',
+    species: 'reptile',
+    name: 'reptile horn 2',
+    description: 'Cure este Mingle com o dano causado por esta carta.',
+    type: 'ranged',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -40,39 +40,39 @@ export const HORN_CARDS: Card<'reptile', 'horn'>[] = [
             }
         }
         /* eslint-enable */
-    })
+  })
 ];
 
 export const TAIL_CARDS: Card<'reptile', 'tail'>[] = [
-    new Card({
-        cost: 1,
-        attack: 120,
-        shield: 30,
-        part: 'tail',
-        species: 'reptile',
-        name: 'reptile tails 1',
-        description: 'Causa 120% de dano se este Mingle atacar primeiro.',
-        type: 'ranged',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        assets: {
-            audio: { start: '', finish: '' },
-            image: {
-                card: 'https://www.mylearningonline.com.au/wp-content/uploads/Course-reptile-zoology-feature-1.jpg',
-                hitbox: ''
-            }
-        }
-    }),
-    new Card({
-        cost: 0,
-        attack: 120,
-        shield: 30,
-        part: 'tail',
-        species: 'reptile',
-        name: 'reptile tails 2',
-        description: 'Aplique ataque+ nesse mingle',
-        type: 'idle',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  new Card({
+    cost: 1,
+    attack: 120,
+    shield: 30,
+    part: 'tail',
+    species: 'reptile',
+    name: 'reptile tails 1',
+    description: 'Causa 120% de dano se este Mingle atacar primeiro.',
+    type: 'ranged',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    assets: {
+      audio: { start: '', finish: '' },
+      image: {
+        card: 'https://www.mylearningonline.com.au/wp-content/uploads/Course-reptile-zoology-feature-1.jpg',
+        hitbox: ''
+      }
+    }
+  }),
+  new Card({
+    cost: 0,
+    attack: 120,
+    shield: 30,
+    part: 'tail',
+    species: 'reptile',
+    name: 'reptile tails 2',
+    description: 'Aplique ataque+ nesse mingle',
+    type: 'idle',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -81,21 +81,21 @@ export const TAIL_CARDS: Card<'reptile', 'tail'>[] = [
             }
         }
         /* eslint-enable */
-    })
+  })
 ];
 
 export const MOUTH_CARDS: Card<'reptile', 'mouth'>[] = [
-    new Card({
-        cost: 1,
-        attack: 100,
-        shield: 30,
-        part: 'mouth',
-        species: 'reptile',
-        name: 'reptile mounths 1',
-        description: 'Reptile Beak',
-        type: 'ranged',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  new Card({
+    cost: 1,
+    attack: 100,
+    shield: 30,
+    part: 'mouth',
+    species: 'reptile',
+    name: 'reptile mounths 1',
+    description: 'Reptile Beak',
+    type: 'ranged',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -104,18 +104,18 @@ export const MOUTH_CARDS: Card<'reptile', 'mouth'>[] = [
             }
         }
         /* eslint-enable */
-    }),
-    new Card({
-        cost: 1,
-        attack: 100,
-        shield: 30,
-        part: 'mouth',
-        species: 'reptile',
-        name: 'reptile mounths 2',
-        description: 'Reptile Beak',
-        type: 'ranged',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  }),
+  new Card({
+    cost: 1,
+    attack: 100,
+    shield: 30,
+    part: 'mouth',
+    species: 'reptile',
+    name: 'reptile mounths 2',
+    description: 'Reptile Beak',
+    type: 'ranged',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -124,21 +124,21 @@ export const MOUTH_CARDS: Card<'reptile', 'mouth'>[] = [
             }
         }
         /* eslint-enable */
-    })
+  })
 ];
 
 export const BACK_CARDS: Card<'reptile', 'back'>[] = [
-    new Card({
-        cost: 1,
-        attack: 110,
-        shield: 30,
-        part: 'back',
-        species: 'reptile',
-        name: 'reptile back 1',
-        description: 'Backdoor no mingle com menor vitalidade',
-        type: 'ranged',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  new Card({
+    cost: 1,
+    attack: 110,
+    shield: 30,
+    part: 'back',
+    species: 'reptile',
+    name: 'reptile back 1',
+    description: 'Backdoor no mingle com menor vitalidade',
+    type: 'ranged',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -147,18 +147,18 @@ export const BACK_CARDS: Card<'reptile', 'back'>[] = [
             }
         }
         /* eslint-enable */
-    }),
-    new Card({
-        cost: 1,
-        attack: 110,
-        shield: 30,
-        part: 'back',
-        species: 'reptile',
-        name: 'reptile back 2',
-        description: 'Cure este mingle em 120 HP.',
-        type: 'ranged',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  }),
+  new Card({
+    cost: 1,
+    attack: 110,
+    shield: 30,
+    part: 'back',
+    species: 'reptile',
+    name: 'reptile back 2',
+    description: 'Cure este mingle em 120 HP.',
+    type: 'ranged',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -167,5 +167,5 @@ export const BACK_CARDS: Card<'reptile', 'back'>[] = [
             }
         }
         /* eslint-enable */
-    })
+  })
 ];

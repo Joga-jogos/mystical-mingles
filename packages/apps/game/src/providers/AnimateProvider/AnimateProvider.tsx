@@ -23,136 +23,136 @@ interface AnimateContextConfig {
 }
 
 export const AnimateContext = createContext<AnimateContextConfig>({
-    actor: undefined,
+  actor: undefined,
 
-    animate: () => Promise.resolve(),
+  animate: () => Promise.resolve(),
 });
 
 export default function Animate({ children }: PropsWithChildren) {
-    const { game, round, me, enemy } = useGameControl();
-    const { endAnimation } = useMatchmaking();
+  const { game, round, me, enemy } = useGameControl();
+  const { endAnimation } = useMatchmaking();
 
-    const [actor, setActor] = useState<Champion<Species>>();
-    const [sawTheAnimation, setSawTheAnimation] = useState(false);
+  const [actor, setActor] = useState<Champion<Species>>();
+  const [sawTheAnimation, setSawTheAnimation] = useState(false);
 
-    const context = useMemo<AnimateContextConfig>(() => ({
-        actor,
+  const context = useMemo<AnimateContextConfig>(() => ({
+    actor,
 
-        animate: (round) => animate(round)
-    }), [actor, game, round]);
+    animate: (round) => animate(round)
+  }), [actor, game, round]);
 
-    useEffect(() => {
-        if (!round) { return; }
-        if (!me) { return; }
-        if (!endAnimation) { return; }
+  useEffect(() => {
+    if (!round) { return; }
+    if (!me) { return; }
+    if (!endAnimation) { return; }
 
-        const nobodyPlayedCards = round.whoHasAlreadyPlayed.length === 0;
-        const nobodySawAnimation = round.whoSawTheAnimation.length === 0;
-        const isPlaying = round.status === 'playing';
+    const nobodyPlayedCards = round.whoHasAlreadyPlayed.length === 0;
+    const nobodySawAnimation = round.whoSawTheAnimation.length === 0;
+    const isPlaying = round.status === 'playing';
 
-        if (nobodyPlayedCards && nobodySawAnimation && isPlaying) { setSawTheAnimation(false); }
+    if (nobodyPlayedCards && nobodySawAnimation && isPlaying) { setSawTheAnimation(false); }
 
-        const shouldNotSeeTheAnimation =
+    const shouldNotSeeTheAnimation =
             round.status !== 'animating'
             || round.whoSawTheAnimation.includes(me.id)
             || sawTheAnimation;
 
-        if (shouldNotSeeTheAnimation) { return; }
+    if (shouldNotSeeTheAnimation) { return; }
 
-        setSawTheAnimation(true);
+    setSawTheAnimation(true);
 
-        animate(round).then(async () => {
-            await endAnimation(me, round);
-        });
-    }, [round, sawTheAnimation]);
+    animate(round).then(async () => {
+      await endAnimation(me, round);
+    });
+  }, [round, sawTheAnimation]);
 
-    const animate = async (round: MatchmakingRound) => {
-        if (!game) { return; }
-        if (!me) { return; }
-        if (!enemy) { return; }
-        if (!endAnimation) { return; }
+  const animate = async (round: MatchmakingRound) => {
+    if (!game) { return; }
+    if (!me) { return; }
+    if (!enemy) { return; }
+    if (!endAnimation) { return; }
 
-        const championActions = game.turnOrder.reduce<{ [x: string]: MatchmakingAction[] }>((acc, champion) => {
-            const championActions = round.actions.filter(action => action.actor.mingle.id === champion.id);
+    const championActions = game.turnOrder.reduce<{ [x: string]: MatchmakingAction[] }>((acc, champion) => {
+      const championActions = round.actions.filter(action => action.actor.mingle.id === champion.id);
 
-            acc[champion.id] = championActions;
+      acc[champion.id] = championActions;
 
-            return acc;
-        }, {});
+      return acc;
+    }, {});
 
-        try {
-            for (const [id, actions] of Object.entries(championActions)) {
-                if (!actions.length) { continue; }
+    try {
+      for (const [id, actions] of Object.entries(championActions)) {
+        if (!actions.length) { continue; }
 
-                const itsMine = me.team.champions.some(c => c.id === id);
+        const itsMine = me.team.champions.some(c => c.id === id);
 
-                let haveMovedYet = false;
+        let haveMovedYet = false;
 
-                setActor(undefined);
+        setActor(undefined);
 
-                await wait(() => { }, 500);
+        await wait(() => { }, 500);
 
-                for (const [index, action] of Array.from(actions).entries()) {
-                    const { target, type, damage, miss, truedamage } = action;
+        for (const [index, action] of Array.from(actions).entries()) {
+          const { target, type, damage, miss, truedamage } = action;
 
-                    if (!target.mingle.id) { continue; };
+          if (!target.mingle.id) { continue; };
 
-                    const elChampion = document.getElementById(id);
+          const elChampion = document.getElementById(id);
 
-                    if (!elChampion) { continue; };
+          if (!elChampion) { continue; };
 
-                    const elTarget = document.getElementById(target.mingle.id);
+          const elTarget = document.getElementById(target.mingle.id);
 
-                    if (!elTarget) { continue; };
+          if (!elTarget) { continue; };
 
-                    const championActor = game.alive.find(c => c.id === id);
-                    const championTarget = game.alive.find(c => c.id === target.mingle.id);
+          const championActor = game.alive.find(c => c.id === id);
+          const championTarget = game.alive.find(c => c.id === target.mingle.id);
 
-                    if (!championActor || !championTarget) { continue; };
+          if (!championActor || !championTarget) { continue; };
 
-                    setActor(championActor);
+          setActor(championActor);
 
-                    await wait(() => { }, 1000);
+          await wait(() => { }, 1000);
 
-                    if (type === 'melee' && !haveMovedYet) {
-                        await goTo(elChampion, elTarget, !itsMine);
-                        haveMovedYet = true;
-                    };
+          if (type === 'melee' && !haveMovedYet) {
+            await goTo(elChampion, elTarget, !itsMine);
+            haveMovedYet = true;
+          };
 
-                    await attack(
-                        elChampion,
-                        elTarget,
-                        action,
-                        () => {
-                            if (miss) { return; }
+          await attack(
+            elChampion,
+            elTarget,
+            action,
+            () => {
+              if (miss) { return; }
 
-                            if (truedamage) { championTarget.takeTrueDamage(damage); }
+              if (truedamage) { championTarget.takeTrueDamage(damage); }
 
-                            if (!truedamage) { championTarget.takeDamage(damage); }
+              if (!truedamage) { championTarget.takeDamage(damage); }
 
-                            game.update({
-                                players: [game.players[0], game.players[1]]
-                            });
+              game.update({
+                players: [game.players[0], game.players[1]]
+              });
 
-                            return;
-                        }
-                    );
-
-                    const isTheLastAction = (actions.length - 1) === index;
-
-                    if (isTheLastAction && haveMovedYet) { await goBack(elChampion); }
-
-                    elChampion.style.zIndex = '6';
-                }
+              return;
             }
-        } finally {
-            setActor(undefined);
-        }
-    };
+          );
 
-    return (
-        <AnimateContext.Provider value={context}>
-            {children}
-        </AnimateContext.Provider>
-    );
+          const isTheLastAction = (actions.length - 1) === index;
+
+          if (isTheLastAction && haveMovedYet) { await goBack(elChampion); }
+
+          elChampion.style.zIndex = '6';
+        }
+      }
+    } finally {
+      setActor(undefined);
+    }
+  };
+
+  return (
+    <AnimateContext.Provider value={context}>
+      {children}
+    </AnimateContext.Provider>
+  );
 }

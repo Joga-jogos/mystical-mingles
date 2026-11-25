@@ -1,36 +1,36 @@
 import Card from '../../card';
 
 export const HORN_CARDS: Card<'fish', 'horn'>[] = [
-    new Card({
-        cost: 1,
-        attack: 90,
-        shield: 70,
-        part: 'horn',
-        species: 'fish',
-        name: 'fish horn 1',
-        description: 'Destrói uma energia do inimigo',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        assets: {
-            audio: { start: '', finish: '' },
-            image: {
-                card: 'https://t3.ftcdn.net/jpg/10/00/83/88/360_F_1000838829_opU8XWhuS4MX52zSEWJEORma7lNhFZw5.jpg',
-                hitbox: ''
-            }
-        }
+  new Card({
+    cost: 1,
+    attack: 90,
+    shield: 70,
+    part: 'horn',
+    species: 'fish',
+    name: 'fish horn 1',
+    description: 'Destrói uma energia do inimigo',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    assets: {
+      audio: { start: '', finish: '' },
+      image: {
+        card: 'https://t3.ftcdn.net/jpg/10/00/83/88/360_F_1000838829_opU8XWhuS4MX52zSEWJEORma7lNhFZw5.jpg',
+        hitbox: ''
+      }
+    }
 
-    }),
-    new Card({
-        cost: 1,
-        attack: 90,
-        shield: 70,
-        part: 'horn',
-        species: 'fish',
-        name: 'fish horn 2',
-        description: 'Apróxima carta jogada tem o seu dano aumentado',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  }),
+  new Card({
+    cost: 1,
+    attack: 90,
+    shield: 70,
+    part: 'horn',
+    species: 'fish',
+    name: 'fish horn 2',
+    description: 'Apróxima carta jogada tem o seu dano aumentado',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -39,60 +39,60 @@ export const HORN_CARDS: Card<'fish', 'horn'>[] = [
             }
         }
         /* eslint-enable */
-    })
+  })
 ];
 
 export const TAIL_CARDS: Card<'fish', 'tail'>[] = [
-    new Card({
-        cost: 1,
-        attack: 100,
-        shield: 40,
-        part: 'tail',
-        species: 'fish',
-        name: 'fish tails 1',
-        description: 'Apróxima carta jogada tem o seu dano aumentado',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        assets: {
-            audio: { start: '', finish: '' },
-            image: {
-                card: 'https://staticg.sportskeeda.com/editor/2025/03/e2727-17422267991189-1920.jpg?w=640',
-                hitbox: ''
-            }
-        }
-    }),
-    new Card({
-        cost: 1,
-        attack: 100,
-        shield: 40,
-        part: 'tail',
-        species: 'fish',
-        name: 'fish tails 2',
-        description: 'Deixa o adversário stunado',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        assets: {
-            audio: { start: '', finish: '' },
-            image: {
-                card: 'https://aquaforest.eu/wp-content/uploads/2025/06/blazenek-scaled.jpg',
-                hitbox: ''
-            }
-        }
-    })
+  new Card({
+    cost: 1,
+    attack: 100,
+    shield: 40,
+    part: 'tail',
+    species: 'fish',
+    name: 'fish tails 1',
+    description: 'Apróxima carta jogada tem o seu dano aumentado',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    assets: {
+      audio: { start: '', finish: '' },
+      image: {
+        card: 'https://staticg.sportskeeda.com/editor/2025/03/e2727-17422267991189-1920.jpg?w=640',
+        hitbox: ''
+      }
+    }
+  }),
+  new Card({
+    cost: 1,
+    attack: 100,
+    shield: 40,
+    part: 'tail',
+    species: 'fish',
+    name: 'fish tails 2',
+    description: 'Deixa o adversário stunado',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    assets: {
+      audio: { start: '', finish: '' },
+      image: {
+        card: 'https://aquaforest.eu/wp-content/uploads/2025/06/blazenek-scaled.jpg',
+        hitbox: ''
+      }
+    }
+  })
 ];
 
 export const MOUTH_CARDS: Card<'fish', 'mouth'>[] = [
-    new Card({
-        cost: 1,
-        attack: 125,
-        shield: 15,
-        part: 'mouth',
-        species: 'fish',
-        name: 'fish mounths 1',
-        description: 'Aplica fraqueza no adversário',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  new Card({
+    cost: 1,
+    attack: 125,
+    shield: 15,
+    part: 'mouth',
+    species: 'fish',
+    name: 'fish mounths 1',
+    description: 'Aplica fraqueza no adversário',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -101,39 +101,39 @@ export const MOUTH_CARDS: Card<'fish', 'mouth'>[] = [
             }
         }
         /* eslint-enable */
-    }),
-    new Card({
-        cost: 1,
-        attack: 125,
-        shield: 15,
-        part: 'mouth',
-        species: 'fish',
-        name: 'fish mounths 2',
-        description: 'Destrói uma energia do adversário',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        assets: {
-            audio: { start: '', finish: '' },
-            image: {
-                card: 'https://marsemfim.com.br/wp-content/uploads/2014/12/peixe-diabo-negro.jpg',
-                hitbox: ''
-            }
-        }
-    })
+  }),
+  new Card({
+    cost: 1,
+    attack: 125,
+    shield: 15,
+    part: 'mouth',
+    species: 'fish',
+    name: 'fish mounths 2',
+    description: 'Destrói uma energia do adversário',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    assets: {
+      audio: { start: '', finish: '' },
+      image: {
+        card: 'https://marsemfim.com.br/wp-content/uploads/2014/12/peixe-diabo-negro.jpg',
+        hitbox: ''
+      }
+    }
+  })
 ];
 
 export const BACK_CARDS: Card<'fish', 'back'>[] = [
-    new Card({
-        cost: 1,
-        attack: 130,
-        shield: 10,
-        part: 'back',
-        species: 'fish',
-        name: 'fish back 1',
-        description: 'Ganha uma energia',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        /* eslint-disable */
+  new Card({
+    cost: 1,
+    attack: 130,
+    shield: 10,
+    part: 'back',
+    species: 'fish',
+    name: 'fish back 1',
+    description: 'Ganha uma energia',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -142,23 +142,23 @@ export const BACK_CARDS: Card<'fish', 'back'>[] = [
             }
         }
         /* eslint-enable */
-    }),
-    new Card({
-        cost: 1,
-        attack: 130,
-        shield: 10,
-        part: 'back',
-        species: 'fish',
-        name: 'fish back 2',
-        description: 'Ganha uma energia',
-        type: 'melee',
-        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
-        assets: {
-            audio: { start: '', finish: '' },
-            image: {
-                card: 'https://pbs.twimg.com/media/CPCDgOOUEAAJm2z.jpg:large',
-                hitbox: ''
-            }
-        }
-    })
+  }),
+  new Card({
+    cost: 1,
+    attack: 130,
+    shield: 10,
+    part: 'back',
+    species: 'fish',
+    name: 'fish back 2',
+    description: 'Ganha uma energia',
+    type: 'melee',
+    effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
+    assets: {
+      audio: { start: '', finish: '' },
+      image: {
+        card: 'https://pbs.twimg.com/media/CPCDgOOUEAAJm2z.jpg:large',
+        hitbox: ''
+      }
+    }
+  })
 ];

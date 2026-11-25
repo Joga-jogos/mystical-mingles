@@ -3,8 +3,8 @@ import { Timestamp } from 'firebase-admin/firestore';
 import Game from '@mystical-mingles/engine/game';
 
 import type {
-    MatchmakingData,
-    MatchmakingRound,
+  MatchmakingData,
+  MatchmakingRound,
 } from '@mystical-mingles/services/matchmaking';
 import { toGame, toMatchmaking } from '@mystical-mingles/services/matchmaking';
 
@@ -17,40 +17,40 @@ type InitGame = {
 }
 
 export async function initGame({ id, matchmaking, db }: InitGame) {
-    const players = toGame.mapPlayer(matchmaking.players);
+  const players = toGame.mapPlayer(matchmaking.players);
 
-    const game = new Game({
-        id: '',
-        round: 1,
-        createdAt: new Date(),
-        priority: [],
-        players
-    });
+  const game = new Game({
+    id: '',
+    round: 1,
+    createdAt: new Date(),
+    priority: [],
+    players
+  });
 
-    game.setPriority();
+  game.setPriority();
 
-    game.players[0].team.deckManager.buyCards(6);
-    game.players[1].team.deckManager.buyCards(6);
+  game.players[0].team.deckManager.buyCards(6);
+  game.players[1].team.deckManager.buyCards(6);
 
-    await db.setItem<MatchmakingRound>({
-        data: {
-            id: 1,
-            status: 'playing',
-            actions: [],
-            whoSawTheAnimation: [],
-            whoHasAlreadyPlayed: [],
-            priority: game.priority,
-            updatedAt: Timestamp.fromDate(new Date()),
-            players: toMatchmaking.mapPlayerRound(game.players),
-        },
-        segments: [
-            { collection: 'matchmaking', doc: id },
-            { collection: 'rounds', doc: 'Round1' },
-        ],
-    });
+  await db.setItem<MatchmakingRound>({
+    data: {
+      id: 1,
+      status: 'playing',
+      actions: [],
+      whoSawTheAnimation: [],
+      whoHasAlreadyPlayed: [],
+      priority: game.priority,
+      updatedAt: Timestamp.fromDate(new Date()),
+      players: toMatchmaking.mapPlayerRound(game.players),
+    },
+    segments: [
+      { collection: 'matchmaking', doc: id },
+      { collection: 'rounds', doc: 'Round1' },
+    ],
+  });
 
-    return await db.update<MatchmakingData>({
-        segments: [{ collection: 'matchmaking', doc: id },],
-        data: { status: 'ready' }
-    });
+  return await db.update<MatchmakingData>({
+    segments: [{ collection: 'matchmaking', doc: id },],
+    data: { status: 'ready' }
+  });
 }

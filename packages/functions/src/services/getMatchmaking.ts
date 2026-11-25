@@ -8,7 +8,7 @@ type GetMatchmaking = {
 }
 
 export function getMatchmaking({ id, db }: GetMatchmaking) {
-    return db.getCollection<MatchmakingData>({
-        segments: [{ collection: 'matchmaking', doc: id }]
-    });
+  return db.getCollection<MatchmakingData>({
+    segments: [{ collection: 'matchmaking', doc: id }]
+  });
 }

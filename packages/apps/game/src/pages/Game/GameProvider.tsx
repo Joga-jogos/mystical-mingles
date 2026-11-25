@@ -23,83 +23,83 @@ type GameContextConfig = {
 export const GameContext = createContext<GameContextConfig>({});
 
 export default function GameProvider({ game, children }: PropsWithChildren<{ game: Game }>) {
-    const { user } = useAuth();
+  const { user } = useAuth();
 
-    const { gameOptions, matchmaking, subscriptionRounds, leaveRound } = useMatchmaking();
+  const { gameOptions, matchmaking, subscriptionRounds, leaveRound } = useMatchmaking();
 
-    const [round, setRound] = useState<MatchmakingRound>();
+  const [round, setRound] = useState<MatchmakingRound>();
 
-    const { meIndex, enemyIndex } = useMemo(() => ({
-        meIndex: game.players.findIndex(player => player.id === user?.id),
-        enemyIndex: game.players.findIndex(player => player.id !== user?.id),
-    }), [game]);
+  const { meIndex, enemyIndex } = useMemo(() => ({
+    meIndex: game.players.findIndex(player => player.id === user?.id),
+    enemyIndex: game.players.findIndex(player => player.id !== user?.id),
+  }), [game]);
 
-    const context = useMemo<GameContextConfig>(() => ({
-        game,
-        round,
-        me: game.players[meIndex],
-        enemy: game.players[enemyIndex],
-        hasAlreadyPlayed: round?.whoHasAlreadyPlayed.some(id => id === user?.id)
-    }), [game, round]);
+  const context = useMemo<GameContextConfig>(() => ({
+    game,
+    round,
+    me: game.players[meIndex],
+    enemy: game.players[enemyIndex],
+    hasAlreadyPlayed: round?.whoHasAlreadyPlayed.some(id => id === user?.id)
+  }), [game, round]);
 
-    useEffect(() => {
-        if (!leaveRound) { return; }
-        if (!subscriptionRounds) { return; }
-        if (!gameOptions) { return; }
+  useEffect(() => {
+    if (!leaveRound) { return; }
+    if (!subscriptionRounds) { return; }
+    if (!gameOptions) { return; }
 
-        subscriptionRounds(gameOptions.id, (round) => {
-            if (!context.enemy) { return; }
-            if (!context.me) { return; }
-            if (!user) { return; }
-            console.log('>>>>>>>>> STATUS:', round.id, round.status);
+    subscriptionRounds(gameOptions.id, (round) => {
+      if (!context.enemy) { return; }
+      if (!context.me) { return; }
+      if (!user) { return; }
+      console.log('>>>>>>>>> STATUS:', round.id, round.status);
 
-            const nobodyPlayedCards = round.whoHasAlreadyPlayed.length === 0;
-            const nobodySawAnimation = round.whoSawTheAnimation.length === 0;
+      const nobodyPlayedCards = round.whoHasAlreadyPlayed.length === 0;
+      const nobodySawAnimation = round.whoSawTheAnimation.length === 0;
 
-            const everyoneHasAlreadyPlayed = round.whoHasAlreadyPlayed.length === 2;
-            const everyoneHasAlreadySawAnimation = round.whoSawTheAnimation.length === 2;
+      const everyoneHasAlreadyPlayed = round.whoHasAlreadyPlayed.length === 2;
+      const everyoneHasAlreadySawAnimation = round.whoSawTheAnimation.length === 2;
 
-            setRound(round);
+      setRound(round);
 
-            if (everyoneHasAlreadyPlayed && everyoneHasAlreadySawAnimation) {
-                console.log('ESTÃO JOGANDO');
-                return;
-            }
+      if (everyoneHasAlreadyPlayed && everyoneHasAlreadySawAnimation) {
+        console.log('ESTÃO JOGANDO');
+        return;
+      }
 
-            if (everyoneHasAlreadyPlayed && !everyoneHasAlreadySawAnimation) {
-                console.log('ATAUALIZA AS CARTAS PARA VER A ANIMAÇÃO');
-                updateGame(round, { shouldUpdateLife: false });
-                return;
-            }
+      if (everyoneHasAlreadyPlayed && !everyoneHasAlreadySawAnimation) {
+        console.log('ATAUALIZA AS CARTAS PARA VER A ANIMAÇÃO');
+        updateGame(round, { shouldUpdateLife: false });
+        return;
+      }
 
-            if (nobodyPlayedCards && nobodySawAnimation) {
-                console.log('COMEÇANDO UM NOVO ROUND');
-                updateGame(round);
-                return;
-            }
-        });
+      if (nobodyPlayedCards && nobodySawAnimation) {
+        console.log('COMEÇANDO UM NOVO ROUND');
+        updateGame(round);
+        return;
+      }
+    });
 
-        return () => { leaveRound(); };
-    }, []);
+    return () => { leaveRound(); };
+  }, []);
 
-    const updateGame = (round: MatchmakingRound, options?: toGame.MapPlayersOptions) => {
-        if (!context.enemy) { return; }
-        if (!context.me) { return; }
-        if (!matchmaking) { return; }
+  const updateGame = (round: MatchmakingRound, options?: toGame.MapPlayersOptions) => {
+    if (!context.enemy) { return; }
+    if (!context.me) { return; }
+    if (!matchmaking) { return; }
 
-        const players = toGame.mapPlayer(matchmaking.players, round, options);
+    const players = toGame.mapPlayer(matchmaking.players, round, options);
 
-        game.update({
-            round: round.id,
-            players
-        });
-    };
+    game.update({
+      round: round.id,
+      players
+    });
+  };
 
-    return (
-        <GameContext.Provider value={context}>
-            <AnimateProvider>
-                {children}
-            </AnimateProvider>
-        </GameContext.Provider>
-    );
+  return (
+    <GameContext.Provider value={context}>
+      <AnimateProvider>
+        {children}
+      </AnimateProvider>
+    </GameContext.Provider>
+  );
 }
