@@ -6,7 +6,9 @@
 
     transition: all $animation;
 
-    // animation: breath 1.5s ease-in-out infinite;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
 
     &--active {
         box-shadow: $box-shadow-regular;

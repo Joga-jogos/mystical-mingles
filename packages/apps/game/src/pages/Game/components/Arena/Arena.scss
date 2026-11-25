@@ -1,10 +1,10 @@
 .arena-container {
     @include grid(0, 11);
 
-    margin-top: 125px;
+    margin-top: 200px;
 
     .arena-slot {
-        height: 50px;
+        height: 100px;
         display: flex;
         align-items: center;
         justify-content: center;

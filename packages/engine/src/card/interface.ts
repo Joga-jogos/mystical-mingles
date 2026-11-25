@@ -1,20 +1,20 @@
 import type { IntRange } from '@mystical-mingles/toolkit/interface';
 
-import type { Effect } from '../effect';
 import type { ActiveParts } from '../parts';
 import type { Species, Genes } from '../species';
+import type { Effect, Type, Target } from '../effect';
 
 export type Cost = IntRange<0, 3>;
 export type Attack = number;
 export type Shield = number;
-export type Type = 'ranged' | 'melee';
+export type AttackType = 'ranged' | 'melee' | 'idle';
 
 export type Assets = {
   audio: { start: string; finish: string; };
   image: { card: string; hitbox: string; };
 }
 
-export type CardEffect<E extends Effect> = { name: E; value: number; }
+export type CardEffect<E extends Effect> = { name: E; value: number; type: Type; target: Target; }
 
 export type CardOptions<S extends Species, P extends ActiveParts> = {
   id?: string;
@@ -26,7 +26,7 @@ export type CardOptions<S extends Species, P extends ActiveParts> = {
   species: S;
   effect?: CardEffect<Effect>;
   name: Genes[S][P][number];
-  type: Type;
+  type: AttackType;
   assets: Assets;
 };
 

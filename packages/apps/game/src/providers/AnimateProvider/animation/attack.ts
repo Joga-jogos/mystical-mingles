@@ -70,6 +70,10 @@ export async function attack(
     action: MatchmakingAction,
     cb: () => void
 ) {
+    if (action.actor.buffs?.raise_damage) {
+        await messageAnimation(el, 'Raise damage', 'rise-damage');
+    }
+
     attackAnimation(el);
 
     const isRanged = action.type === 'ranged';

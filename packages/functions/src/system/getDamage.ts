@@ -31,8 +31,8 @@ export function getDamage({ champion, target, card }: GetDamage): Data {
         return { damage: 0, miss: true, critical, truedamage, };
     }
 
-    if (champion.buffs.damage) {
-        damage += buffsMultiplicators.damage(card.attack) * champion.buffs.damage;
+    if (champion.buffs.raise_damage) {
+        damage += buffsMultiplicators.damage(card.attack) * champion.buffs.raise_damage;
     }
 
     if (card.species === champion.species) {

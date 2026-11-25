@@ -6,7 +6,17 @@ import type { GridItemBaseProps } from './interface';
 import './Grid.scss';
 
 export interface GridItemProps extends GridItemBaseProps { children: React.ReactNode; }
-function GridItem({ children, gridColumnStart, xl = 1, lg, md, sm, ...props }: Readonly<GridItemProps>) {
+function GridItem({
+    children,
+    gridColumnStart,
+    placeItems,
+    alignSelf,
+    xl = 1,
+    lg,
+    md,
+    sm,
+    ...props
+}: Readonly<GridItemProps>) {
     const SIZES = {
         xl,
         lg: lg || xl,
@@ -27,6 +37,8 @@ function GridItem({ children, gridColumnStart, xl = 1, lg, md, sm, ...props }: R
             {...props}
             className={className}
             style={{
+                alignSelf,
+                placeItems,
                 gridColumnStart,
                 ...props.style,
             }}

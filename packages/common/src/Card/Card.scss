@@ -76,11 +76,6 @@ $background: rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-
-            svg {
-                fill: $text-color ;
-                stroke: $text-color;
-            }
         }
 
         &__square {

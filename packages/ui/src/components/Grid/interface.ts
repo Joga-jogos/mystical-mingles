@@ -1,4 +1,4 @@
-import { HtmlHTMLAttributes } from 'react';
+import { CSSProperties, HtmlHTMLAttributes } from 'react';
 
 import type { IntRange } from '@mystical-mingles/toolkit/interface';
 
@@ -10,4 +10,8 @@ export type Size = {
 }
 
 export type GridBaseProps = HtmlHTMLAttributes<HTMLElement> & Partial<Size>;
-export type GridItemBaseProps = GridBaseProps & { gridColumnStart?: IntRange<1, 13>; }
+export type GridItemBaseProps = GridBaseProps & {
+    gridColumnStart?: IntRange<1, 13>;
+    alignSelf?: CSSProperties['alignSelf'];
+    placeItems?: CSSProperties['placeItems'];
+}

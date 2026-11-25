@@ -2,13 +2,15 @@ import type { HTMLAttributes } from 'react';
 
 import Stack from '@mystical-mingles/ui/components/Stack';
 import SwordIcon from '@mystical-mingles/ui/custom-icons/Sword';
-import BoltIcon from '@mystical-mingles/ui/custom-icons/Bolt';
 import ShieldIcon from '@mystical-mingles/ui/custom-icons/Shield';
+import BowIcon from '@mystical-mingles/ui/custom-icons/Bow';
 import Typography from '@mystical-mingles/ui/components/Typography';
 
 import type Card from '@mystical-mingles/engine/card';
 import type { Species } from '@mystical-mingles/engine/species';
 import type { ActiveParts } from '@mystical-mingles/engine/parts';
+
+import { getEffectIcon } from '../getEffectIcon';
 
 import useCard from './useCard';
 
@@ -20,7 +22,11 @@ interface DeckCardProps extends HTMLAttributes<HTMLElement> {
 }
 
 export default function CardUI({ card, size = 1, ...props }: DeckCardProps) {
+    const TEXT_COLOR = '#ffffdd';
+
     const { background } = useCard(card.species);
+
+    const Icon = getEffectIcon(card.effect.name);
 
     return (
         <div
@@ -73,13 +79,16 @@ export default function CardUI({ card, size = 1, ...props }: DeckCardProps) {
                         alignItems="center"
                         justifyContent="center"
                         className="card__stats__square"
-                        style={{}}
                     >
-                        <SwordIcon />
+                        {
+                            card.type === 'ranged'
+                                ? <BowIcon />
+                                : <SwordIcon />
+                        }
                         <Typography>{card.attack}</Typography>
                     </Stack>
                     <div className="card__stats__circle">
-                        <BoltIcon />
+                        <Icon fill={TEXT_COLOR} />
                     </div>
                     <Stack
                         gap={4}

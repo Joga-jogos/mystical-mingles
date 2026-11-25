@@ -1,12 +1,22 @@
 export { default as Beast } from './Beast';
 export { default as Bird } from './Bird';
 export { default as Bolt } from './Bolt';
+export { default as Bow } from './Bow';
 export { default as Bug } from './Bug';
+export { default as Deck } from './Deck';
+export { default as Fast } from './Fast';
+export { default as Fire } from './Fire';
 export { default as Fish } from './Fish';
+export { default as Glove } from './Glove';
+export { default as Heal } from './Heal';
+export { default as Heart } from './Heart';
 export { default as Leaf } from './Leaf';
 export { default as Reptile } from './Reptile';
 export { default as Shield } from './Shield';
 export { default as Skull } from './Skull';
+export { default as Spiral } from './Spiral';
 export { default as Sword } from './Sword';
+export { default as Target } from './Target';
+export { default as Weakness } from './Weakness';
 
 export * from './interface';

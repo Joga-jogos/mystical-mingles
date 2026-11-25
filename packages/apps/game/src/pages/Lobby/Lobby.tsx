@@ -20,6 +20,7 @@ import { generateMingle } from '@mystical-mingles/engine/mingle';
 import { generateTeamName } from '@mystical-mingles/engine/team';
 import type { Coordinates } from '@mystical-mingles/engine/champion';
 
+import Mingle from '@mystical-mingles/common/Mingle';
 import { useAuth } from '@mystical-mingles/common/Auth';
 import { usePlayer } from '@mystical-mingles/common/Player';
 import { useMatchmaking } from '@mystical-mingles/common/Matchmaking';
@@ -174,7 +175,10 @@ export default function Lobby() {
                 {
                     mingles.map(mingle => (
                         <GridItem key={mingle.id}>
-                            <span>{mingle.name}</span>
+                            <Mingle
+                                options={mingle}
+
+                            />
                         </GridItem>
                     ))
                 }

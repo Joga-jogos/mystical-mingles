@@ -2,7 +2,7 @@ import type { Timestamp } from 'firebase/firestore';
 
 import type { Species } from '@mystical-mingles/engine/species';
 import type { ActiveParts } from '@mystical-mingles/engine/parts';
-import type { CardOptionsLock, Type } from '@mystical-mingles/engine/card';
+import type { CardOptionsLock, AttackType } from '@mystical-mingles/engine/card';
 import type { ChampionOptionsWithMingleOptions, SetOfEffects } from '@mystical-mingles/engine/champion';
 
 export type ByPlayer<T> = { [playerId: string]: T }
@@ -61,9 +61,9 @@ export interface MatchmakingDeck {
 }
 
 export interface MatchmakingAction {
+    type: AttackType;
     actor: ChampionOptionsWithMingleOptions<Species>;
     target: ChampionOptionsWithMingleOptions<Species>;
-    type: Type;
     damage: number;
     miss: boolean;
     critical: boolean;

@@ -1,6 +1,6 @@
 import { modificators } from '../species';
 import type { Stats } from '../parts';
-import type { Buff, Debuff } from '../effect';
+import type { Buff, Debuff, Effect } from '../effect';
 import type { Category, Species } from '../species';
 import type { MingleCards, MingleColor, MingleGenes } from '../mingle';
 
@@ -98,5 +98,16 @@ export default class Champion<S extends Species> implements ChampionOptions {
         const newLife = this.life - damage;
 
         this.life = newLife > 0 ? newLife : 0;
+    }
+
+    applyBuff(effect: Effect, value: number) {
+        console.log('>>>', this.buffs[effect], value);
+
+        if (this.buffs[effect]) {
+            this.buffs[effect] += value;
+            return;
+        }
+
+        this.buffs[effect] = value;
     }
 }

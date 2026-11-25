@@ -18,7 +18,7 @@ export default function createIcon(IconComponent: ComponentType<CustomIconProps>
             <IconComponent
                 {...(props as CustomIconProps)}
                 style={{
-                    color: c,
+                    color: props.style?.color || c,
                     width: size,
                     height: size,
                 }}

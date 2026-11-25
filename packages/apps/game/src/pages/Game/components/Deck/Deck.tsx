@@ -44,7 +44,7 @@ export default function Deck({ order, champion, cards, onChoose }: DeckProps) {
                                     className="deck-card-button"
                                     onClick={() => handleChoose(card)}
                                 >
-                                    <CardUI card={card} size={.7} />
+                                    <CardUI card={card} />
                                 </button>
                                 <div className="deck-card-fake">
                                     <CardUI card={card} />

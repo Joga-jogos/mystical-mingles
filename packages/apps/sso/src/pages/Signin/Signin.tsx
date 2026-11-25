@@ -30,7 +30,7 @@ export default function Signin() {
                     <Box sx={{ mb: 2 }} textAlign="center">
                         <Typography
                             variant="h1"
-                            family="mystical-mingles"
+                            family="zuera"
                             style={{
                                 position: 'absolute',
                                 left: '49%',
@@ -46,7 +46,7 @@ export default function Signin() {
                         <Typography
                             variant="h1"
                             color="primary.contrastText"
-                            family="mystical-mingles"
+                            family="zuera"
                             style={{
                                 zIndex: 2,
                                 position: 'relative',
@@ -54,7 +54,7 @@ export default function Signin() {
                                 fontSize: '3.75rem',
                             }}
                         >
-                            Joga jogos
+                            Mystical Mingles
                         </Typography>
                     </Box>
                     <Button

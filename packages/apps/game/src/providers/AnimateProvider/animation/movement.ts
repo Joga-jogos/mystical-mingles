@@ -12,14 +12,14 @@ export async function goTo(el: HTMLElement, target: HTMLElement, isEnemy: boolea
 
     // aplicar a transição
     el.style.transform = `translate(${dx + modificador}px, ${dy}px)`;
-    el.style.zIndex = '5';
+    el.style.zIndex = '100';
 
     return wait(() => { }, 300);
 }
 
 export async function goBack(el: HTMLElement) {
     el.style.transform = 'translate(0px, 0px)';
-    el.style.zIndex = '5';
+    el.style.zIndex = '100';
 
     return wait(() => { }, 300);
 }

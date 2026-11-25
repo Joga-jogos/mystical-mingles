@@ -8,9 +8,9 @@ export const HORN_CARDS: Card<'reptile', 'horn'>[] = [
         part: 'horn',
         species: 'reptile',
         name: 'reptile horn 1',
-        description: 'Reptile horn 1',
+        description: 'Aplique ataque+ a este Mingle ao atacar alvos Planta ou Réptil',
         type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -23,14 +23,14 @@ export const HORN_CARDS: Card<'reptile', 'horn'>[] = [
     }),
     new Card({
         cost: 1,
-        attack: 150,
-        shield: 30,
+        attack: 60,
+        shield: 60,
         part: 'horn',
         species: 'reptile',
         name: 'reptile horn 2',
-        description: 'Reptile horn 2',
+        description: 'Cure este Mingle com o dano causado por esta carta.',
         type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -51,9 +51,9 @@ export const TAIL_CARDS: Card<'reptile', 'tail'>[] = [
         part: 'tail',
         species: 'reptile',
         name: 'reptile tails 1',
-        description: 'Reptile Feather',
+        description: 'Causa 120% de dano se este Mingle atacar primeiro.',
         type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -63,15 +63,15 @@ export const TAIL_CARDS: Card<'reptile', 'tail'>[] = [
         }
     }),
     new Card({
-        cost: 1,
+        cost: 0,
         attack: 120,
         shield: 30,
         part: 'tail',
         species: 'reptile',
         name: 'reptile tails 2',
-        description: 'Reptile Feather',
-        type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        description: 'Aplique ataque+ nesse mingle',
+        type: 'idle',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -94,7 +94,7 @@ export const MOUTH_CARDS: Card<'reptile', 'mouth'>[] = [
         name: 'reptile mounths 1',
         description: 'Reptile Beak',
         type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -114,7 +114,7 @@ export const MOUTH_CARDS: Card<'reptile', 'mouth'>[] = [
         name: 'reptile mounths 2',
         description: 'Reptile Beak',
         type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -135,9 +135,9 @@ export const BACK_CARDS: Card<'reptile', 'back'>[] = [
         part: 'back',
         species: 'reptile',
         name: 'reptile back 1',
-        description: 'Reptile Wing',
+        description: 'Backdoor no mingle com menor vitalidade',
         type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -155,9 +155,9 @@ export const BACK_CARDS: Card<'reptile', 'back'>[] = [
         part: 'back',
         species: 'reptile',
         name: 'reptile back 2',
-        description: 'Reptile Wing',
+        description: 'Cure este mingle em 120 HP.',
         type: 'ranged',
-        effect: { name: 'faster_backdoor', value: 0 },
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },

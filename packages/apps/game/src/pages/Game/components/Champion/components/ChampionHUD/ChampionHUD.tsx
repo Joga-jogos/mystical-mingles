@@ -5,11 +5,13 @@ import Typography from '@mystical-mingles/ui/components/Typography';
 
 import type Champion from '@mystical-mingles/engine/champion';
 import type { Species } from '@mystical-mingles/engine/species';
+import type { Effect } from '@mystical-mingles/engine/effect';
 
 import { useSpecies } from '@mystical-mingles/common/Species';
 
-import './ChampionHUD.scss';
+import ChampionEffect from '../ChampionEffect';
 
+import './ChampionHUD.scss';
 interface ChampionHUDProps {
     champion: Champion<Species>;
 }
@@ -19,6 +21,17 @@ export default function ChampionHUD({ champion }: ChampionHUDProps) {
 
     return (
         <div className="hud">
+            <Stack justifyContent="center" alignItems="center">
+                {
+                    Object.entries(champion.buffs).map(([effect, value]) => (
+                        <ChampionEffect
+                            key={effect}
+                            value={value}
+                            effect={effect as Effect}
+                        />
+                    ))
+                }
+            </Stack>
             <Stack gap={4} flexDirection="row" alignItems="center">
                 <Zoom enter={Boolean(champion.shield)} delay={0} className="hud__shield">
                     <Shield className="hud__shield__icon" size={30} color="info.main" />

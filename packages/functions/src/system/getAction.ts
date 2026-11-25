@@ -4,7 +4,8 @@ import type { Species } from '@mystical-mingles/engine/species';
 import type { ActiveParts } from '@mystical-mingles/engine/parts';
 import type { CardOptionsLock } from '@mystical-mingles/engine/card';
 
-import { getTarget } from './getTarget';
+import type { MatchmakingAction } from '@mystical-mingles/services/matchmaking';
+
 import { getDamage } from './getDamage';
 
 type GetAction = {
@@ -21,7 +22,7 @@ export function getAction({
     target,
     challenger,
     cardOptions,
-}: GetAction) {
+}: GetAction): MatchmakingAction {
     const card = me.team.deckManager.inPlay[champion.id]
         .find(card => card.name === cardOptions.name);
     // const isMelee = card.type === 'melee';
@@ -36,6 +37,16 @@ export function getAction({
 
     if (truedamage) { target.takeTrueDamage(damage); }
     if (!truedamage) { target.takeDamage(damage); }
+
+    if (card.effect.target === 'self') {
+        if (card.effect.type === 'buff') {
+            champion.applyBuff(card.effect.name, card.effect.value);
+        }
+    }
+
+    // if (card.effect.target === 'target') {
+
+    // }
 
     return {
         type: card.type,

@@ -4,7 +4,7 @@ import type { Effect } from '../effect';
 import type { ActiveParts } from '../parts';
 import type { Genes, Species } from '../species';
 
-import type { CardOptions, CardOptionsLock, Cost, Type, Assets, CardEffect } from './interface';
+import type { CardOptions, CardOptionsLock, Cost, AttackType, Assets, CardEffect } from './interface';
 
 export default class Card<S extends Species, P extends ActiveParts> implements CardOptions<S, P> {
     private _id: string;
@@ -15,7 +15,7 @@ export default class Card<S extends Species, P extends ActiveParts> implements C
     public readonly part: P;
     public readonly species: S;
     public readonly cost: Cost;
-    public readonly type: Type;
+    public readonly type: AttackType;
     public readonly assets: Assets;
     public readonly effect: CardEffect<Effect>;
     public readonly description: string;

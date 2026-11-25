@@ -18,15 +18,31 @@ WARN_TEXT=\x1b[33m
 
 # Função para executar comandos dentro do workspace
 define run_in_workspace
-	@echo ------------------------------------------------------------------------------;
-	@printf "${WARN_BOX} RUNNING ${RESET_BOX}: $(1) - $(2) $(3)\n";
-	@echo ;
-	@$(RUN) workspace @$(NAME)/$(1) $(2) $(3)
-
-	@if [ $$? -eq 0 ]; then \
-		printf "${SUCCESS_BOX} SUCCESS ${RESET_BOX}: $(1) - $(2) $(3)\n"; \
-		echo ------------------------------------------------------------------------------; \
-	fi
+	@workspace='@$(NAME)/$(1)'; \
+	echo "------------------------------------------------------------------------------"; \
+    printf "${INFO_TEXT}${PRISM} $${workspace}\n"; \
+    printf "${WARN_TEXT}${ARROW} $(2) $(3)${RESET_TEXT}\n"; \
+    start=$$(date +%s); \
+    started_at=$$(date '+%H:%M:%S'); \
+    echo "Started at: " "$$started_at"; \
+    echo "------------------------------------------------------------------------------"; \
+    $(RUN) workspace @$(NAME)/$(1) $(2) $(3); \
+    status=$$?; \
+    end=$$(date +%s); \
+    finished_at=$$(date '+%H:%M:%S'); \
+    elapsed=$$((end - start)); \
+    minutes=$$((elapsed / 60)); \
+    seconds=$$((elapsed % 60)); \
+    echo "------------------------------------------------------------------------------"; \
+	if [ "$$status" -eq 0 ]; then \
+        printf "${SUCCESS_TEXT}${CHECK} [SUCCESS] $(2) $(3)${RESET_TEXT}\n"; \
+    else \
+        printf "${ERROR_TEXT}${TIMES} [ERROR] $(2) $(3)${RESET_TEXT}\n"; \
+    fi; \
+    printf "Duration: %dm %02ds\n" "$$minutes" "$$seconds"; \
+    printf "Exit code: %s\n" "$$status"; \
+    echo "------------------------------------------------------------------------------"; \
+    exit "$$status"
 endef
 
 # Extrair parâmetros dos argumentos posicionais
@@ -73,7 +89,7 @@ toolkit-test:
 # -------------------- EMULADOR ------------------- #
 
 # CUIDADO: Este comando irá sobrescrever o path mock
-db-write:
+emulator:
 	@cd packages/db && firebase emulators:start --import ./mock --export-on-exit ./mock
 
 db:

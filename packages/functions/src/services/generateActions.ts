@@ -1,5 +1,3 @@
-import { logger } from 'firebase-functions';
-
 import Game from '@mystical-mingles/engine/game';
 
 import type { MatchmakingData, MatchmakingRound, MatchmakingAction } from '@mystical-mingles/services/matchmaking';
@@ -16,9 +14,7 @@ interface GenerateActions {
     matchmaking: MatchmakingData;
 }
 
-export function generateActions({ matchmaking, round, lastRound, db }: GenerateActions) {
-    logger.debug('>>> lastRound', lastRound);
-
+export function generateActions({ matchmaking, round, db }: GenerateActions) {
     const players = toGame.mapPlayer(matchmaking.players, round);
 
     const game = new Game({
@@ -45,6 +41,9 @@ export function generateActions({ matchmaking, round, lastRound, db }: GenerateA
             champion,
             team: challenger.team,
         });
+
+        // VIRIFIACAR SE O MINGLE VAI FICAR VIVO ANTES DE CALCULAR AS AÇÕES
+        const actionsTarget = acc.find(a => a.target.mingle.id === target.id);
 
         const actions = cards.map<MatchmakingAction>(cardOptions => {
             return getAction({

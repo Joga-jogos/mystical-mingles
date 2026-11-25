@@ -8,9 +8,9 @@ export const HORN_CARDS: Card<'fish', 'horn'>[] = [
         part: 'horn',
         species: 'fish',
         name: 'fish horn 1',
-        description: 'Fish Shark',
+        description: 'Destrói uma energia do inimigo',
         type: 'melee',
-
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -27,8 +27,9 @@ export const HORN_CARDS: Card<'fish', 'horn'>[] = [
         part: 'horn',
         species: 'fish',
         name: 'fish horn 2',
-        description: 'Fish Shark',
+        description: 'Apróxima carta jogada tem o seu dano aumentado',
         type: 'melee',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -49,8 +50,9 @@ export const TAIL_CARDS: Card<'fish', 'tail'>[] = [
         part: 'tail',
         species: 'fish',
         name: 'fish tails 1',
-        description: 'Fish Gold',
+        description: 'Apróxima carta jogada tem o seu dano aumentado',
         type: 'melee',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -66,8 +68,9 @@ export const TAIL_CARDS: Card<'fish', 'tail'>[] = [
         part: 'tail',
         species: 'fish',
         name: 'fish tails 2',
-        description: 'Fish Gold',
+        description: 'Deixa o adversário stunado',
         type: 'melee',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -86,8 +89,9 @@ export const MOUTH_CARDS: Card<'fish', 'mouth'>[] = [
         part: 'mouth',
         species: 'fish',
         name: 'fish mounths 1',
-        description: 'Fish Eat',
+        description: 'Aplica fraqueza no adversário',
         type: 'melee',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -105,8 +109,9 @@ export const MOUTH_CARDS: Card<'fish', 'mouth'>[] = [
         part: 'mouth',
         species: 'fish',
         name: 'fish mounths 2',
-        description: 'Fish Eat',
+        description: 'Destrói uma energia do adversário',
         type: 'melee',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         assets: {
             audio: { start: '', finish: '' },
             image: {
@@ -125,8 +130,9 @@ export const BACK_CARDS: Card<'fish', 'back'>[] = [
         part: 'back',
         species: 'fish',
         name: 'fish back 1',
-        description: 'Deal 150% damage when attacking an idle target Deal 150% damage',
+        description: 'Ganha uma energia',
         type: 'melee',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         /* eslint-disable */
         assets: {
             audio: { start: '', finish: '' },
@@ -144,8 +150,9 @@ export const BACK_CARDS: Card<'fish', 'back'>[] = [
         part: 'back',
         species: 'fish',
         name: 'fish back 2',
-        description: 'Deal 150% damage when attacking an idle target',
+        description: 'Ganha uma energia',
         type: 'melee',
+        effect: { name: 'raise_damage', value: 1, target: 'self', type: 'buff' },
         assets: {
             audio: { start: '', finish: '' },
             image: {

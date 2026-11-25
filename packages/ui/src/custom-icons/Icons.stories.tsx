@@ -9,6 +9,7 @@ import { wait } from '@mystical-mingles/toolkit/promise';
 import Zoom from '../animations/Zoom';
 import Icon from '../components/Icon';
 import Stack from '../components/Stack';
+import Typography from '../components/Typography';
 import { Grid, GridItem } from '../components/Grid';
 
 import * as Icons from './index';
@@ -23,7 +24,7 @@ function BoxCopy({ name, children }: PropsWithChildren<{ name: string }>) {
     const handleCopy = () => {
         if (copied) { return; }
 
-        copy(`import ${name} from "@mystical-mingles/ui/icons/${name}";`);
+        copy(`import ${name} from "@mystical-mingles/ui/custom-icons/${name}";`);
 
         setCopied(true);
 
@@ -43,7 +44,7 @@ function BoxCopy({ name, children }: PropsWithChildren<{ name: string }>) {
                     width: '100%',
                     padding: 10,
                 }}>
-                    <span>{name}</span>
+                    <Typography>{name}</Typography>
                 </div>
                 <button
                     style={{

@@ -57,8 +57,6 @@ export default function Animate({ children }: PropsWithChildren) {
             || round.whoSawTheAnimation.includes(me.id)
             || sawTheAnimation;
 
-        console.log('>>> shouldNotSeeTheAnimation', shouldNotSeeTheAnimation);
-
         if (shouldNotSeeTheAnimation) { return; }
 
         setSawTheAnimation(true);
@@ -91,6 +89,7 @@ export default function Animate({ children }: PropsWithChildren) {
                 let haveMovedYet = false;
 
                 setActor(undefined);
+
                 await wait(() => { }, 500);
 
                 for (const [index, action] of Array.from(actions).entries()) {
@@ -142,6 +141,8 @@ export default function Animate({ children }: PropsWithChildren) {
                     const isTheLastAction = (actions.length - 1) === index;
 
                     if (isTheLastAction && haveMovedYet) { await goBack(elChampion); }
+
+                    elChampion.style.zIndex = '6';
                 }
             }
         } finally {
