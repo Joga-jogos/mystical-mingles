@@ -8,7 +8,8 @@
     "start": "env-cmd -f .env.dev vite",
     "start:stg": "env-cmd -f .env.stg vite",
     "start:prod": "env-cmd -f .env.prod vite",
-    "build": "tsc && vite build",
+    "build": "tsc --noCheck && vite build",
+    "type:check": "tsc --noEmit",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview --port 3000"

@@ -9,8 +9,7 @@
         "composite": true,
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
-        "target": "ES2022",
-        "baseUrl": "."
+        "target": "ES2022"
     },
     "include": [
         "src"

@@ -6,7 +6,8 @@
         "node": "22"
     },
     "scripts": {
-        "build": "tsc",
+        "build": "tsc --noCheck",
+        "type:check": "tsc --noEmit",
         "watch": "tsc -w",
         "serve": "firebase emulators:start",
         "deploy": "firebase deploy --only functions",

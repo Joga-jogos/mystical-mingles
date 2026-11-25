@@ -17,7 +17,8 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc --noCheck -p tsconfig.build.json",
+    "type:check": "tsc --noEmit -p tsconfig.build.json",
     "watch": "tsc -w -p tsconfig.build.json",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"

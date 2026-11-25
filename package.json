@@ -12,6 +12,7 @@
   "scripts": {
     "lint": "yarn workspaces foreach -ptv run lint",
     "lint:fix": "yarn workspaces foreach -ptv run lint:fix",
+    "type:check": "yarn workspaces foreach -ptv run type:check",
     "build": "yarn workspaces foreach -ptv run build",
     "test": "yarn workspaces foreach -ptv run test"
   },
